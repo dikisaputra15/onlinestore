@@ -15,7 +15,15 @@
                 <ul class="dropdown-menu">
                     <li>
                         <a class="nav-link"
-                            href="#">Users</a>
+                            href="{{ Route('user.index') }}">Users</a>
+                    </li>
+                    <li>
+                        <a class="nav-link"
+                            href="{{ Route('kategori.index') }}">Kategori</a>
+                    </li>
+                    <li>
+                        <a class="nav-link"
+                            href="{{ Route('produk.index') }}">Produk</a>
                     </li>
                 </ul>
             </li>
