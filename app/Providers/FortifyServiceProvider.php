@@ -13,6 +13,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
+use Auth;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -21,7 +22,27 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->instance(
+            LoginResponse::class,
+
+            new class implements LoginResponse
+            {
+                public function toResponse($request)
+                {
+                    if (Auth::user()->hasRole('admin')){
+                        return $request->wantsJson()
+                            ? response()->json(['two-factor' => false])
+                            : redirect()->intended(config('fortify.homeadmin'));
+                    }
+
+                    if (Auth::user()->hasRole('user')){
+                        return $request->wantsJson()
+                            ? response()->json(['two-factor' => false])
+                            : redirect()->intended(config('fortify.home'));
+                    }
+                }
+            }
+        );
     }
 
     /**
@@ -42,6 +63,10 @@ class FortifyServiceProvider extends ServiceProvider
 
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        });
+
+        Fortify::RegisterView (function(){
+            return view('pages.auth.register');
         });
     }
 }

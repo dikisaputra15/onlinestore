@@ -168,7 +168,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        //fortify
+        // fortify
         App\Providers\FortifyServiceProvider::class,
         //spatie
         Spatie\Permission\PermissionServiceProvider::class,

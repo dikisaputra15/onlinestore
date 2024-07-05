@@ -11,7 +11,7 @@
 @section('main')
     <div class="card card-primary">
         <div class="card-header">
-            <h4>Login Admin</h4>
+            <h4>Login</h4>
         </div>
 
         <div class="card-body">
