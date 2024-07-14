@@ -74,6 +74,9 @@
 	<script src="{{ asset('eshop/js/owl-carousel.js') }}"></script>
 	<!-- Magnific Popup JS -->
 	<script src="{{ asset('eshop/js/magnific-popup.js') }}"></script>
+
+	 @stack('scripts')
+	
 	<!-- Waypoints JS -->
 	<script src="{{ asset('eshop/js/waypoints.min.js') }}"></script>
 	<!-- Countdown JS -->

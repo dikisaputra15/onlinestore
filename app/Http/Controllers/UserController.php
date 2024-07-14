@@ -28,12 +28,17 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        User::create([
+        $au = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'roles' => $request->roles
+            'password' => Hash::make($request->password)
         ]);
+
+        if($request->roles == 'admin'){
+            $au->assignRole('admin');
+        }else{
+            $au->assignRole('user');
+        }
 
         return redirect()->route('user.index')->with('success', 'User successfully created');
     }
@@ -56,14 +61,12 @@ class UserController extends Controller
             DB::table('users')->where('id',$id)->update([
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'roles' => $request->roles
+                'password' => Hash::make($request->password)
             ]);
         }else{
             DB::table('users')->where('id',$id)->update([
                 'name' => $request->name,
-                'email' => $request->email,
-                'roles' => $request->roles
+                'email' => $request->email
             ]);
         }
 

@@ -56,4 +56,11 @@ class KategoriController extends Controller
         return redirect()->route('kategori.index')->with('success', 'Kategori successfully updated');
     }
 
+    public function pilihkategori($id)
+    {
+        $produks = DB::table('produks')->where('id_kategori', $id)->orderBy('produks.id', 'desc')->get();
+        $kategori = \App\Models\Kategori::findOrFail($id);
+        return view('pages.front.pilihkategori', compact('produks','kategori'));
+    }
+
 }

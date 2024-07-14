@@ -15,11 +15,8 @@
 							<div class="row">
 								<div class="col-lg-7 col-12">
 									<div class="hero-text">
-										<h1><span>UP TO 50% OFF </span>Shirt For Man</h1>
-										<p>Maboriosam in a nesciung eget magnae <br> dapibus disting tloctio in the find it pereri <br> odiy maboriosm.</p>
-										<div class="button">
-											<a href="#" class="btn">Shop Now!</a>
-										</div>
+										<h1><span>Selamat </span>Datang</h1>
+									
 									</div>
 								</div>
 							</div>
@@ -36,44 +33,59 @@
 	<section class="small-banner section">
 		<div class="container-fluid">
 			<div class="row">
-				<!-- Single Banner  -->
+		
+				<div class="col-12">
+					<div class="section-title">
+						<h2>Produk Baru</h2>
+					</div>
+				</div>
+				
+			@foreach ($produks as $produk)
 				<div class="col-lg-4 col-md-6 col-12">
 					<div class="single-banner">
-						<img src="https://via.placeholder.com/600x370" alt="#">
+						<img src="{{ Storage::url('gambarproduk/'.$produk->path_gambar) }}" style="height: 370px; width: 600px;">
 						<div class="content">
-							<p>Man's Collectons</p>
-							<h3>Summer travel <br> collection</h3>
-							<a href="#">Discover Now</a>
+							<p>Produk Baru</p>
+							<h3>{{$produk->nama_produk}}</h3>
+							<p>Rp. {{$produk->harga}}</p>
+							<?php if($produk->stok < 1){ ?>
+							
+								<div class="row">
+									<div class="col-lg-3">
+										<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
+										<input type="text" class="form-control" name="id_produk" value="{{$produk->id}}" hidden>
+									</div>
+									<div class="col-lg-9">
+										<a href="/po/{{$produk->id}}/formpo" class="btn" style="color: white;">PO</a>
+									</div>
+									<div>
+										<p style="color: red;">Produk Habis Silahkan PO</p>
+									</div>
+								</div>
+							
+						<?php }else{ ?>
+							<form action="/keranjangnew" method="POST">
+            					@csrf
+								<div class="row">
+									<div class="col-lg-3">
+										<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
+										<input type="text" class="form-control" name="id_produk" value="{{$produk->id}}" hidden>
+										<input type="number" class="form-control" name="qty" placeholder="Qty">
+									</div>
+									<div class="col-lg-9">
+										<button class="btn btn-primary" style="color: white;">Add Chart</button>
+									</div>
+								</div>
+							</form>
+						<?php } ?>
 						</div>
 					</div>
 				</div>
-				<!-- /End Single Banner  -->
-				<!-- Single Banner  -->
-				<div class="col-lg-4 col-md-6 col-12">
-					<div class="single-banner">
-						<img src="https://via.placeholder.com/600x370" alt="#">
-						<div class="content">
-							<p>Bag Collectons</p>
-							<h3>Awesome Bag <br> 2020</h3>
-							<a href="#">Shop Now</a>
-						</div>
-					</div>
-				</div>
-				<!-- /End Single Banner  -->
-				<!-- Single Banner  -->
-				<div class="col-lg-4 col-12">
-					<div class="single-banner tab-height">
-						<img src="https://via.placeholder.com/600x370" alt="#">
-						<div class="content">
-							<p>Flash Sale</p>
-							<h3>Mid Season <br> Up to <span>40%</span> Off</h3>
-							<a href="#">Discover Now</a>
-						</div>
-					</div>
-				</div>
-				<!-- /End Single Banner  -->
+			@endforeach
+			
 			</div>
 		</div>
+
 	</section>
 	<!-- End Small Banner -->
 	
@@ -90,115 +102,54 @@
             <div class="row">
                 <div class="col-12">
                     <div class="owl-carousel popular-slider">
-						<!-- Start Single Product -->
-						<div class="single-product">
-							<div class="product-img">
-								<a href="product-details.html">
-									<img class="default-img" src="https://via.placeholder.com/550x750" alt="#">
-									<img class="hover-img" src="https://via.placeholder.com/550x750" alt="#">
-									<span class="out-of-stock">Hot</span>
-								</a>
-								<div class="button-head">
-									<div class="product-action">
-										<a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></a>
-										<a title="Wishlist" href="#"><i class=" ti-heart "></i><span>Add to Wishlist</span></a>
-										<a title="Compare" href="#"><i class="ti-bar-chart-alt"></i><span>Add to Compare</span></a>
-									</div>
-									<div class="product-action-2">
-										<a title="Add to cart" href="#">Add to cart</a>
-									</div>
-								</div>
-							</div>
-							<div class="product-content">
-								<h3><a href="product-details.html">Black Sunglass For Women</a></h3>
-								<div class="product-price">
-									<span class="old">$60.00</span>
-									<span>$50.00</span>
-								</div>
-							</div>
-						</div>
-						<!-- End Single Product -->
-						<!-- Start Single Product -->
+
+						@foreach ($items as $item)
 						<div class="single-product">
                             <div class="product-img">
-                                <a href="product-details.html">
-                                    <img class="default-img" src="https://via.placeholder.com/550x750" alt="#">
-                                    <img class="hover-img" src="https://via.placeholder.com/550x750" alt="#">
+                                <a href="#">
+                                    <img class="default-img" src="{{ Storage::url('gambarproduk/'.$item->path_gambar) }}" alt="#" style="height: 350px; width: 250px;">
                                 </a>
-								<div class="button-head">
-									<div class="product-action">
-										<a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></a>
-										<a title="Wishlist" href="#"><i class=" ti-heart "></i><span>Add to Wishlist</span></a>
-										<a title="Compare" href="#"><i class="ti-bar-chart-alt"></i><span>Add to Compare</span></a>
-									</div>
-									<div class="product-action-2">
-										<a title="Add to cart" href="#">Add to cart</a>
-									</div>
-								</div>
                             </div>
                             <div class="product-content">
-                                <h3><a href="product-details.html">Women Hot Collection</a></h3>
+                                <h3>{{$item->nama_produk}}</h3>
                                 <div class="product-price">
-                                    <span>$50.00</span>
+                                    <span>Rp. {{$item->harga}}</span>
                                 </div>
-                            </div>
-                        </div>
-						<!-- End Single Product -->
-						<!-- Start Single Product -->
-						<div class="single-product">
-                            <div class="product-img">
-                                <a href="product-details.html">
-                                    <img class="default-img" src="https://via.placeholder.com/550x750" alt="#">
-                                    <img class="hover-img" src="https://via.placeholder.com/550x750" alt="#">
-									<span class="new">New</span>
-                                </a>
-								<div class="button-head">
-									<div class="product-action">
-										<a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></a>
-										<a title="Wishlist" href="#"><i class=" ti-heart "></i><span>Add to Wishlist</span></a>
-										<a title="Compare" href="#"><i class="ti-bar-chart-alt"></i><span>Add to Compare</span></a>
+                            <?php if($item->stok < 1){ ?>
+							
+								<div class="row">
+									<div>
+										<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
+										<input type="text" class="form-control" name="id_produk" value="{{$produk->id}}" hidden>
 									</div>
-									<div class="product-action-2">
-										<a title="Add to cart" href="#">Add to cart</a>
+									<div>
+										<a href="/po/{{$item->id}}/formpo" class="btn btn-primary" style="color: white;">PO</a>
 									</div>
 								</div>
-                            </div>
-                            <div class="product-content">
-                                <h3><a href="product-details.html">Awesome Pink Show</a></h3>
-                                <div class="product-price">
-                                    <span>$50.00</span>
-                                </div>
+									<div>
+										<p style="color: red;">Produk Habis Silahkan PO</p>
+									</div>
+						
+						<?php }else{ ?>
+                                <form action="/keranjang" method="POST">
+            						@csrf
+	                                <div>
+	                                	<input type="text" class="form-control" name="harga" value="{{$item->harga}}" hidden>
+										<input type="text" class="form-control" name="id_produk" value="{{$item->id}}" hidden>
+										<input type="number" class="form-control" name="qty" placeholder="Qty">
+	                            	</div><br>
+	                                <div>
+	                                	<button class="btn btn-primary" style="color: white;">Add Chart</button>
+	                            	</div>
+                            	 </form>
+                            <?php } ?>
                             </div>
                         </div>
-						<!-- End Single Product -->
-						<!-- Start Single Product -->
-						<div class="single-product">
-                            <div class="product-img">
-                                <a href="product-details.html">
-                                    <img class="default-img" src="https://via.placeholder.com/550x750" alt="#">
-                                    <img class="hover-img" src="https://via.placeholder.com/550x750" alt="#">
-                                </a>
-								<div class="button-head">
-									<div class="product-action">
-										<a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></a>
-										<a title="Wishlist" href="#"><i class=" ti-heart "></i><span>Add to Wishlist</span></a>
-										<a title="Compare" href="#"><i class="ti-bar-chart-alt"></i><span>Add to Compare</span></a>
-									</div>
-									<div class="product-action-2">
-										<a title="Add to cart" href="#">Add to cart</a>
-									</div>
-								</div>
-                            </div>
-                            <div class="product-content">
-                                <h3><a href="product-details.html">Awesome Bags Collection</a></h3>
-                                <div class="product-price">
-                                    <span>$50.00</span>
-                                </div>
-                            </div>
-                        </div>
-						<!-- End Single Product -->
+						@endforeach
+
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

@@ -49,23 +49,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="form-label">Roles</label>
-                                <div class="selectgroup w-100">
-                                    <label class="selectgroup-item">
-                                        <input type="radio" name="roles" value="admin" class="selectgroup-input"
-                                            @if ($user->roles == 'admin') checked @endif>
-                                        <span class="selectgroup-button">Admin</span>
-                                    </label>
-                                    <label class="selectgroup-item">
-                                        <input type="radio" name="roles" value="user" class="selectgroup-input"
-                                            @if ($user->roles == 'user') checked @endif>
-                                        <span class="selectgroup-button">User</span>
-                                    </label>
-
-                                </div>
-                            </div>
-
 
 
                         </div>

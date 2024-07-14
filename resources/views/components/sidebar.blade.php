@@ -30,7 +30,11 @@
 
 
             <li class="nav-item">
-                <a href="" class="nav-link"><i class="fas fa-th-large"></i><span>Transaksi</span></a>
+                <a href="/admintransaksi" class="nav-link"><i class="fas fa-th-large"></i><span>Transaksi</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a href="/lappenjualan" class="nav-link"><i class="fas fa-th-large"></i><span>Laporan Penjualan</span></a>
             </li>
 
         </ul>

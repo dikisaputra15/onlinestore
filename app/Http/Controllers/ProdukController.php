@@ -108,4 +108,12 @@ class ProdukController extends Controller
         return redirect()->route('produk.index')->with('success', 'Produk successfully updated');
 
     }
+
+    public function cariproduk(Request $request)
+    {
+        $produk = $request->cari;
+        $caris = Produk::where('nama_produk', 'LIKE', "%{$produk}%")->get();
+        return view('pages.front.cariproduk', compact('caris'));
+
+    }
 }
