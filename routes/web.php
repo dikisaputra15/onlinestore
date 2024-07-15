@@ -39,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
     Route::get('/admintransaksi', [App\Http\Controllers\HomeController::class, 'admintransaksi']);
+    Route::get('/lappenjualan', [App\Http\Controllers\HomeController::class, 'formlappenjualan']);
+    Route::post('/pdfpenjualan', [App\Http\Controllers\HomeController::class, 'lihatpdf']);
 
     Route::resource('user', UserController::class);
     Route::resource('kategori', KategoriController::class);

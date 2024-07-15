@@ -29,7 +29,7 @@ class HomeController extends Controller
         return view('pages.dashboard', compact('pesananmasuk','pomasuk'));
     }
 
-    public function admintransaksi()
+    public function admintransaksi(Request $request)
     {
          $pesanans = DB::table('pesanans')
             ->when($request->input('name'), function($query, $name){
@@ -38,5 +38,15 @@ class HomeController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(10);
         return view('pages.pesanan.transaksi', compact('pesanans'));
+    }
+
+    public function formlappenjualan()
+    {
+        return view('pages.pesanan.formlappenjualan');
+    }
+
+    public function lihatpdf(Request $request)
+    {
+
     }
 }
