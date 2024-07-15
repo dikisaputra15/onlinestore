@@ -28,12 +28,12 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Tanggal</label>
-                                <input type="date" class="form-control" name="tgl1" required>
+                                <input type="date" class="form-control" name="start_date" required>
                             </div>
 
                             <div class="form-group">
                                 <label>Sampai Dengan Tanggal</label>
-                                <input type="date" class="form-control" name="tgl2" required>
+                                <input type="date" class="form-control" name="end_date" required>
                             </div>
 
                         </div>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'History Transaksi')
+@section('title', 'Pesanan Masuk')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -12,7 +12,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>History Transaksi</h1>
+                <h1>Pesanan Masuk</h1>
                
             </div>
             <div class="section-body">
@@ -21,17 +21,17 @@
                         @include('layouts.alert')
                     </div>
                 </div>
-                <h2 class="section-title">History Transaksi</h2>
+                <h2 class="section-title">Pesanan Masuk</h2>
 
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>All History Transaksi</h4>
+                                <h4>Pesanan Masuk</h4>
                             </div>
                             <div class="card-body">
                                 <div class="float-right">
-                                    <form method="GET" action="/admintransaksi">
+                                    <form method="GET" action="/pesananmasuk">
                                         <div class="input-group">
                                             <input type="text"
                                                 class="form-control"
@@ -55,25 +55,35 @@
                                         <th>Alamat</th>
                                         <th>Status</th>
                                         <th>Keterangan</th>
+                                        <th>Action</th>
                                     </tr>
 
                                     @php($i = 1)
-                                    @foreach ($pesanans as $pesan)
+                                    @foreach ($pesananmasuks as $pesan)
                                         <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <td>{{ $pesan->tgl_pemesanan }}</td>
-                                        <td>{{ $pesan->nama_penerima }}</td>
-                                        <td>{{ $pesan->no_hp }}</td>
-                                        <td>{{ $pesan->alamat }}</td>
-                                        <td>{{ $pesan->status }}</td>
-                                        <td>{{ $pesan->keterangan }}</td>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ $pesan->tgl_pemesanan }}</td>
+                                            <td>{{ $pesan->nama_penerima }}</td>
+                                            <td>{{ $pesan->no_hp }}</td>
+                                            <td>{{ $pesan->alamat }}</td>
+                                            <td>{{ $pesan->status }}</td>
+                                            <td>{{ $pesan->keterangan }}</td>
+                                            <td>
+                                                <div class="d-flex justify-content-center">
+                                                    <a href="/pesananmasuk/update/{{$pesan->id}}"
+                                                        class="btn btn-sm btn-info btn-icon">
+                                                        <i class="fas fa-edit"></i>
+                                                        Update
+                                                    </a>
+                                                </div>
+                                            </td>
                                         </tr>
                                      @endforeach
 
                                     </table>
                                 </div>
                                 <div class="float-right">
-                                    {{$pesanans->withQueryString()->links()}}
+                                    {{$pesananmasuks->withQueryString()->links()}}
                                 </div>
                             </div>
                         </div>

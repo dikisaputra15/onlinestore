@@ -26,7 +26,7 @@
                         </div>
                         <div class="card-wrap">
                             <div class="card-header">
-                                <h4>Pesanan Masuk</h4>
+                                <a href="/pesananmasuk"><h4>Pesanan Masuk</h4></a>
                             </div>
                             <div class="card-body">
                                 {{$pesananmasuk}}
@@ -41,7 +41,7 @@
                         </div>
                         <div class="card-wrap">
                             <div class="card-header">
-                                <h4>PO Masuk</h4>
+                                <a href="/pomasuk"><h4>PO Masuk</h4></a>
                             </div>
                             <div class="card-body">
                                 {{$pomasuk}}
