@@ -7,7 +7,7 @@
 					<div class="col-lg-2 col-md-2 col-12">
 						<!-- Logo -->
 						<div class="logo">
-							<a href="/"><img src="{{ asset('eshop/images/logo.png') }}" alt="logo"></a>
+							<a href="/"><img src="{{ asset('eshop/images/logo.jpeg') }}" alt="logo"></a>
 						</div>
 						<!--/ End Logo -->
 						<!-- Search Form -->
