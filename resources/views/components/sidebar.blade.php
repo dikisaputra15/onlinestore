@@ -28,9 +28,28 @@
                 </ul>
             </li>
 
+            <li class="nav-item dropdown">
+                <a href="#"
+                    class="nav-link has-dropdown"><i class="far fa-file-alt"></i><span>Pesanan</span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="nav-link"
+                            href="/pesananmasuk">Pesanan Biasa</a>
+                    </li>
+                    <li>
+                        <a class="nav-link"
+                            href="/pomasuk">PO</a>
+                    </li>
+                </ul>
+            </li>
+
 
             <li class="nav-item">
-                <a href="/admintransaksi" class="nav-link"><i class="fas fa-th-large"></i><span>Transaksi</span></a>
+                <a href="/admintransaksi" class="nav-link"><i class="fas fa-th-large"></i><span>Pembayaran Sukses</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a href="/admintransaksi" class="nav-link"><i class="fas fa-th-large"></i><span>Data Pengiriman</span></a>
             </li>
 
             <li class="nav-item">
