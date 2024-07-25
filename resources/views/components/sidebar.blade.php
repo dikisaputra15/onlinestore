@@ -15,7 +15,7 @@
                 <ul class="dropdown-menu">
                     <li>
                         <a class="nav-link"
-                            href="{{ Route('user.index') }}">Users</a>
+                            href="{{ Route('user.index') }}">Management User</a>
                     </li>
                     <li>
                         <a class="nav-link"

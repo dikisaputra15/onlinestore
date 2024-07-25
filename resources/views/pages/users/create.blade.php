@@ -64,6 +64,10 @@
                                         <input type="radio" name="roles" value="user" class="selectgroup-input">
                                         <span class="selectgroup-button">User</span>
                                     </label>
+                                    <label class="selectgroup-item">
+                                        <input type="radio" name="roles" value="owner" class="selectgroup-input">
+                                        <span class="selectgroup-button">Owner</span>
+                                    </label>
                                 </div>
                             </div>
                         </div>

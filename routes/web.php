@@ -45,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pomasuk', [App\Http\Controllers\HomeController::class, 'pomasuk']);
     Route::get('/pesananmasuk/update/{id}', [App\Http\Controllers\HomeController::class, 'updatepesananmasuk']);
     Route::get('/pomasuk/update/{id}', [App\Http\Controllers\HomeController::class, 'updatepomasuk']);
+    Route::get('/konfirmasi/update/{id}', [App\Http\Controllers\HomeController::class, 'updatekonfirmasi']);
 
     Route::resource('user', UserController::class);
     Route::resource('kategori', KategoriController::class);

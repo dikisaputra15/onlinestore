@@ -114,4 +114,13 @@ class HomeController extends Controller
             }
         }
     }
+
+    public function updatekonfirmasi($id)
+    {
+         DB::table('pesanans')->where('id',$id)->update([
+            'keterangan' => 'diterima'
+        ]);
+
+        return redirect("/pesanan")->with('success', 'Status Pesanan Update');
+    }
 }
