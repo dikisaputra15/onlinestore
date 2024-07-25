@@ -30,6 +30,11 @@ class HomeController extends Controller
         return view('pages.dashboard', compact('pesananmasuk','pomasuk'));
     }
 
+    public function owner()
+    {
+        return view('pages.owner');
+    }
+
     public function admintransaksi(Request $request)
     {
          $pesanans = DB::table('pesanans')
@@ -44,6 +49,11 @@ class HomeController extends Controller
     public function formlappenjualan()
     {
         return view('pages.pesanan.formlappenjualan');
+    }
+
+    public function formlappenjualanowner()
+    {
+        return view('pages.pesanan.formlappenjualanowner');
     }
 
     public function lihatpdf(Request $request)

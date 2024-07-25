@@ -36,8 +36,10 @@ class UserController extends Controller
 
         if($request->roles == 'admin'){
             $au->assignRole('admin');
-        }else{
+        }else if($request->roles == 'user'){
             $au->assignRole('user');
+        }else{
+            $au->assignRole('owner');
         }
 
         return redirect()->route('user.index')->with('success', 'User successfully created');
@@ -58,17 +60,20 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         if($request->password != ''){
-            DB::table('users')->where('id',$id)->update([
+           $au = DB::table('users')->where('id',$id)->update([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password)
             ]);
+
         }else{
-            DB::table('users')->where('id',$id)->update([
+           $au = DB::table('users')->where('id',$id)->update([
                 'name' => $request->name,
                 'email' => $request->email
             ]);
+
         }
+
 
         return redirect()->route('user.index')->with('success', 'User successfully updated');
     }

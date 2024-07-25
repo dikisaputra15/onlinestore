@@ -1,9 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.appowner')
 
-@section('title', 'Edit Users')
+@section('title', 'Form Lap Penjualan')
 
 @push('style')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="{{ asset('library/bootstrap-daterangepicker/daterangepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('library/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
@@ -17,42 +16,29 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>Edit User</h1>
+                <h1>Laporan Penjualan</h1>
             </div>
 
             <div class="section-body">
-                <h2 class="section-title">Edit User</h2>
+                <h2 class="section-title">filter Berdasarkan Tanggal</h2>
 
                 <div class="card">
-                    <form action="{{ route('user.update', $user->id) }}" method="POST">
+                    <form action="/pdfpenjualan" method="POST" target="__blank">
                         @csrf
-                        @method('PUT')
-
                         <div class="card-body">
                             <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control" name="name" value="{{ $user->name }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" class="form-control" name="email" value="{{ $user->email }}">
-                            </div>
-                            <div class="form-group">
-                                <label>Password</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <i class="fas fa-lock"></i>
-                                        </div>
-                                    </div>
-                                    <input type="password" class="form-control" name="password">
-                                </div>
+                                <label>Tanggal</label>
+                                <input type="date" class="form-control" name="start_date" required>
                             </div>
 
+                            <div class="form-group">
+                                <label>Sampai Dengan Tanggal</label>
+                                <input type="date" class="form-control" name="end_date" required>
+                            </div>
 
                         </div>
                         <div class="card-footer text-right">
-                            <button class="btn btn-primary">Submit</button>
+                            <button class="btn btn-primary">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -63,5 +49,4 @@
 @endsection
 
 @push('scripts')
-
 @endpush
