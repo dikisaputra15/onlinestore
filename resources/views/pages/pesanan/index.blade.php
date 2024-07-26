@@ -7,9 +7,9 @@
 
 		<section class="shop checkout section mt-5">
 			<div class="container">
-				<div class="row"> 
+				<div class="row">
 					<div class="col-lg-4 col-12">
-						
+
 					</div>
 					<div class="col-lg-8 col-12">
 						<h5>Pesanan</h5><br>
@@ -33,14 +33,8 @@
                                   <td>{{ $pesan->alamat }}</td>
                                   <td>{{ $pesan->keterangan }}</td>
                                   <td style="width: 200px;">
-                                  		<a href="/invoice/{{$pesan->id}}/lihatinvoice"><u>Invoice</u></a>
-                                  		<?php if($pesan->status == 'Unpaid') { ?>
-	                                  		<a href="/pembayaran/{{$pesan->id}}/bayar">
-	                                        	<u>Bayar</u>
-	                                    	</a>
-                                    	<?php }else{ ?>
-                                    		<p>Pembayaran Sukses</p>
-                                		<?php } ?>
+                                  		<a href="/invoice/{{$pesan->id}}/lihatinvoice"><u>Bayar</u></a>
+
 										<?php if($pesan->keterangan == 'dikirim') { ?>
 											<a href="/konfirmasi/update/{{$pesan->id}}"><u>Konfirmasi</u></a>
 										<?php } ?>
@@ -54,7 +48,7 @@
 			</div>
 		</section>
 		<!--/ End Checkout -->
-		
+
 @endsection
 
 @push('scripts')

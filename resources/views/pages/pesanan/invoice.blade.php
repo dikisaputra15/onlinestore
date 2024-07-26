@@ -2,14 +2,20 @@
 
 @section('title', 'Invoice')
 
+@push('style')
+    <script type="text/javascript"
+		src="https://app.sandbox.midtrans.com/snap/snap.js"
+    data-client-key="{{config('midtrans.client_key')}}"></script>
+@endpush
+
 @section('main')
 		<!-- Start Checkout -->
 
 		<section class="shop checkout section mt-5">
 			<div class="container">
-				<div class="row"> 
+				<div class="row">
 					<div class="col-lg-4 col-12">
-						
+
 					</div>
 					<div class="col-lg-8 col-12">
 						<div class="order-details">
@@ -52,7 +58,7 @@
 
 								<h2>Identitas Pengiriman</h2><br>
 								<div class="content">
-									
+
 									<div class="form-group">
 										<div class="col-lg-12 col-12">
 										<p>{{$pesanan->nama_penerima}}</p>
@@ -73,8 +79,20 @@
 								</div>
 
 							</div>
-							
-							
+
+                            <div class="single-widget get-button">
+								<div class="content">
+                                    <?php if($pesanan->status == 'Unpaid'){ ?>
+									<div class="button">
+										<button class="btn" id="pay-button">Pilih Pembayaran</button>
+									</div>
+                                    <?php }else{ ?>
+                                    <p>Sudah Dibayar</p>
+                                    <?php } ?>
+								</div>
+							</div>
+
+
 							<!--/ End Button Widget -->
 						</div>
 					</div>
@@ -82,9 +100,36 @@
 			</div>
 		</section>
 		<!--/ End Checkout -->
-		
+
 @endsection
 
 @push('scripts')
-
+<script type="text/javascript">
+    // For example trigger on button clicked, or any time you need
+    var payButton = document.getElementById('pay-button');
+    payButton.addEventListener('click', function () {
+      // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token.
+      // Also, use the embedId that you defined in the div above, here.
+      window.snap.pay('{{$snapToken}}', {
+        onSuccess: function (result) {
+          /* You may add your own implementation here */
+            // alert("payment success!");
+            window.location.href = '/pesanan'
+            console.log(result);
+        },
+        onPending: function (result) {
+          /* You may add your own implementation here */
+          alert("wating your payment!"); console.log(result);
+        },
+        onError: function (result) {
+          /* You may add your own implementation here */
+          alert("payment failed!"); console.log(result);
+        },
+        onClose: function () {
+          /* You may add your own implementation here */
+          alert('you closed the popup without finishing the payment');
+        }
+      });
+    });
+  </script>
 @endpush

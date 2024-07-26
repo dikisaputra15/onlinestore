@@ -13,9 +13,9 @@
 
 		<section class="shop checkout section mt-5">
 			<div class="container">
-				<div class="row"> 
+				<div class="row">
 					<div class="col-lg-4 col-12">
-						
+
 					</div>
 					<div class="col-lg-8 col-12">
 						<div class="order-details">
@@ -58,7 +58,7 @@
 
 								<h2>Identitas Pengiriman</h2><br>
 								<div class="content">
-									
+
 									<div class="form-group">
 										<div class="col-lg-12 col-12">
 										<p>{{$pesanan->nama_penerima}}</p>
@@ -87,8 +87,8 @@
 									</div>
 								</div>
 							</div>
-							
-							
+
+
 							<!--/ End Button Widget -->
 						</div>
 					</div>
@@ -96,7 +96,7 @@
 			</div>
 		</section>
 		<!--/ End Checkout -->
-		
+
 @endsection
 
 @push('scripts')
@@ -109,7 +109,7 @@
       window.snap.pay('{{$snapToken}}', {
         onSuccess: function (result) {
           /* You may add your own implementation here */
-            // alert("payment success!"); 
+            // alert("payment success!");
             window.location.href = '/pesanan'
             console.log(result);
         },

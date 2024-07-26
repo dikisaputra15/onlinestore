@@ -14,7 +14,7 @@ class PesananController extends Controller
     public function index(Request $request)
     {
     	$id = auth()->user()->id;
-    	$pesanans = Pesanan::where('id_user', $id) 
+    	$pesanans = Pesanan::where('id_user', $id)
 				    ->orderBy('created_at', 'desc')
 				    ->take(20)
 				    ->get();
@@ -85,15 +85,38 @@ class PesananController extends Controller
 
     public function lihatinvoice($id)
     {
-    	
+        $id_user = auth()->user()->id;
+
     	$pesanan = \App\Models\Pesanan::findOrFail($id);
-    	
+
+         // Set your Merchant Server Key
+         \Midtrans\Config::$serverKey = config('midtrans.server_key');
+         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+         \Midtrans\Config::$isProduction = false;
+         // Set sanitization on (default)
+         \Midtrans\Config::$isSanitized = true;
+         // Set 3DS transaction for credit card to true
+         \Midtrans\Config::$is3ds = true;
+
+         $params = array(
+             'transaction_details' => array(
+                 'order_id' => $pesanan->id,
+                 'gross_amount' => $pesanan->total_bayar,
+             ),
+             'customer_details' => array(
+                 'name' => $pesanan->nama_penerima,
+             ),
+         );
+
+         $snapToken = \Midtrans\Snap::getSnapToken($params);
+
     	$details = DB::table('detailpesanans')
 		    	->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
 		    	->select('detailpesanans.*', 'produks.nama_produk', 'produks.path_gambar')
 		    	->where('detailpesanans.id_pesanan', $id)
+		    	->where('detailpesanans.id_user', $id_user)
 		    	->orderBy('detailpesanans.id', 'desc')->get();
-    	return view('pages.pesanan.invoice', compact('pesanan','details'));
+    	return view('pages.pesanan.invoice', compact('snapToken', 'pesanan','details'));
     }
 
     public function bayar($id)
@@ -159,7 +182,7 @@ class PesananController extends Controller
         if($pesan){
         	$last_id = Pesanan::latest()->first();
             $pesan_id = $last_id->id;
-           
+
                 Detailpesanan::create([
                     'id_pesanan' => $pesan_id,
                     'id_user' => $id_user,
