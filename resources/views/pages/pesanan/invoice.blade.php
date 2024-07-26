@@ -82,13 +82,11 @@
 
                             <div class="single-widget get-button">
 								<div class="content">
-                                    <?php if($pesanan->status == 'Unpaid'){ ?>
+
 									<div class="button">
 										<button class="btn" id="pay-button">Pilih Pembayaran</button>
 									</div>
-                                    <?php }else{ ?>
-                                    <p>Sudah Dibayar</p>
-                                    <?php } ?>
+
 								</div>
 							</div>
 

@@ -33,8 +33,12 @@
                                   <td>{{ $pesan->alamat }}</td>
                                   <td>{{ $pesan->keterangan }}</td>
                                   <td style="width: 200px;">
-                                  		<a href="/invoice/{{$pesan->id}}/lihatinvoice"><u>Bayar</u></a>
 
+                                        <?php if($pesan->status == 'Unpaid'){ ?>
+                                  		<a href="/invoice/{{$pesan->id}}/lihatinvoice"><u>Bayar</u></a>
+                                        <?php }else{ ?>
+                                            <p>dibayar</p>
+                                        <?php } ?>
 										<?php if($pesan->keterangan == 'dikirim') { ?>
 											<a href="/konfirmasi/update/{{$pesan->id}}"><u>Konfirmasi</u></a>
 										<?php } ?>
