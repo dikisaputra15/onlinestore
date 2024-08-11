@@ -62,27 +62,61 @@ class HomeController extends Controller
 
     public function formlappenjualan()
     {
-        return view('pages.pesanan.formlappenjualan');
+        $kategoris = DB::table('kategoris')->get();
+        return view('pages.pesanan.formlappenjualan', compact('kategoris'));
     }
 
     public function formlappenjualanowner()
     {
-        return view('pages.pesanan.formlappenjualanowner');
+        $kategoris = DB::table('kategoris')->get();
+        return view('pages.pesanan.formlappenjualanowner', compact('kategoris'));
     }
 
     public function lihatpdf(Request $request)
     {
         $start_date = $request->start_date;
         $end_date = $request->end_date;
+        $kategori = $request->kategori;
 
-        $pesanans = DB::table('detailpesanans')
-            ->join('pesanans', 'pesanans.id', '=', 'detailpesanans.id_pesanan')
-            ->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
-            ->select('detailpesanans.*', 'pesanans.*', 'produks.nama_produk')
-            ->whereBetween('pesanans.tgl_pemesanan', [$start_date, $end_date])
-            ->where('pesanans.status', 'Paid')
-            ->get();
-        $total = Pesanan::whereBetween('tgl_pemesanan', [$start_date, $end_date])->where('status', 'Paid')->sum('total_bayar');
+        if($kategori == 0){
+            $pesanans = DB::table('detailpesanans')
+                ->join('pesanans', 'pesanans.id', '=', 'detailpesanans.id_pesanan')
+                ->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+                ->join('users', 'users.id', '=', 'detailpesanans.id_user')
+                ->select('detailpesanans.*', 'pesanans.*', 'produks.nama_produk', 'users.name')
+                ->whereBetween('pesanans.tgl_pemesanan', [$start_date, $end_date])
+                ->where('pesanans.status', 'Paid')
+                ->get();
+            $total = DB::table('detailpesanans')
+                ->join('pesanans', 'pesanans.id', '=', 'detailpesanans.id_pesanan')
+                ->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+                ->join('users', 'users.id', '=', 'detailpesanans.id_user')
+                ->select('detailpesanans.*', 'pesanans.*', 'produks.nama_produk', 'users.name')
+                ->whereBetween('pesanans.tgl_pemesanan', [$start_date, $end_date])
+                ->where('pesanans.status', 'Paid')
+                ->sum('pesanans.total_bayar');
+        }else{
+            $pesanans = DB::table('detailpesanans')
+                ->join('pesanans', 'pesanans.id', '=', 'detailpesanans.id_pesanan')
+                ->join('users', 'users.id', '=', 'detailpesanans.id_user')
+                ->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+                ->join('kategoris', 'kategoris.id', '=', 'produks.id_kategori')
+                ->select('detailpesanans.*', 'pesanans.*', 'produks.nama_produk', 'produks.id_kategori', 'users.name')
+                ->whereBetween('pesanans.tgl_pemesanan', [$start_date, $end_date])
+                ->where('pesanans.status', 'Paid')
+                ->where('produks.id_kategori', $kategori)
+                ->get();
+            $total = DB::table('detailpesanans')
+                ->join('pesanans', 'pesanans.id', '=', 'detailpesanans.id_pesanan')
+                ->join('users', 'users.id', '=', 'detailpesanans.id_user')
+                ->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+                ->join('kategoris', 'kategoris.id', '=', 'produks.id_kategori')
+                ->select('detailpesanans.*', 'pesanans.*', 'produks.nama_produk', 'produks.id_kategori', 'users.name')
+                ->whereBetween('pesanans.tgl_pemesanan', [$start_date, $end_date])
+                ->where('pesanans.status', 'Paid')
+                ->where('produks.id_kategori', $kategori)
+                ->sum('pesanans.total_bayar');
+        }
 
         $pdf = PDF::loadView('lappenjualanpdf', compact('pesanans','total'));
         $pdf->setPaper('A4', 'potrait');

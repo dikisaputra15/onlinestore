@@ -20,7 +20,7 @@
             </div>
 
             <div class="section-body">
-                <h2 class="section-title">filter Berdasarkan Tanggal</h2>
+                <h2 class="section-title">filter Berdasarkan Tanggal & Kategori</h2>
 
                 <div class="card">
                     <form action="/pdfpenjualan" method="POST" target="__blank">
@@ -34,6 +34,16 @@
                             <div class="form-group">
                                 <label>Sampai Dengan Tanggal</label>
                                 <input type="date" class="form-control" name="end_date" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Kategori</label>
+                                <select class="form-control" name="kategori">
+                                    <option value="0">Semua Kategori</option>
+                                    @foreach ($kategoris as $kategori)
+                                        <option value="{{$kategori->id}}">{{$kategori->nama_kategori}}</option>
+                                    @endforeach
+                                </select>
                             </div>
 
                         </div>

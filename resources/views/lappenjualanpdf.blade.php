@@ -11,6 +11,7 @@
   <tr>
     <th>No</th>
     <th>Tanggal</th>
+    <th>Nama Penerima</th>
     <th>Nama Produk</th>
     <th>Qty</th>
     <th>Harga</th>
@@ -21,15 +22,16 @@
   <tr>
     <td>{{ $i++ }}</td>
     <td>{{$pesan->tgl_pemesanan}}</td>
+    <td>{{$pesan->name}}</td>
     <td>{{$pesan->nama_produk}}</td>
     <td>{{$pesan->qty}}</td>
-    <td>{{$pesan->harga_bayar}}</td>
-    <td>{{$pesan->sub_total}}</td>
+    <td>Rp. {{$pesan->harga_bayar}}</td>
+    <td>Rp. {{$pesan->sub_total}}</td>
   </tr>
   @endforeach
   <tr>
 
-    <td colspan="5" style="text-align: center;">Total Pendapatan</td>
+    <td colspan="6" style="text-align: center;">Total Pendapatan</td>
     <td>Rp. {{$total}}</td>
   </tr>
 </table>
