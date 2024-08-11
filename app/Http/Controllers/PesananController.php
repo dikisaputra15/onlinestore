@@ -119,6 +119,21 @@ class PesananController extends Controller
     	return view('pages.pesanan.invoice', compact('snapToken', 'pesanan','details'));
     }
 
+    public function invoicedetail($id)
+    {
+        $id_user = auth()->user()->id;
+
+    	$pesanan = \App\Models\Pesanan::findOrFail($id);
+
+    	$details = DB::table('detailpesanans')
+		    	->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+		    	->select('detailpesanans.*', 'produks.nama_produk', 'produks.path_gambar')
+		    	->where('detailpesanans.id_pesanan', $id)
+		    	->where('detailpesanans.id_user', $id_user)
+		    	->orderBy('detailpesanans.id', 'desc')->get();
+    	return view('pages.pesanan.invoicedetail', compact('pesanan','details'));
+    }
+
     public function bayar($id)
     {
     	$id = auth()->user()->id;

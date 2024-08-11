@@ -63,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [App\Http\Controllers\PesananController::class, 'checkout']);
     Route::post('/prosespesanan', [App\Http\Controllers\PesananController::class, 'storepesanan']);
     Route::get('/invoice/{id}/lihatinvoice', [App\Http\Controllers\PesananController::class, 'lihatinvoice']);
+    Route::get('/invoice/{id}/invoicedetail', [App\Http\Controllers\PesananController::class, 'invoicedetail']);
     Route::get('/pembayaran/{id}/bayar', [App\Http\Controllers\PesananController::class, 'bayar']);
     Route::get('/po/{id}/formpo', [App\Http\Controllers\PesananController::class, 'formpo']);
     Route::post('/prosespo', [App\Http\Controllers\PesananController::class, 'storepo']);
