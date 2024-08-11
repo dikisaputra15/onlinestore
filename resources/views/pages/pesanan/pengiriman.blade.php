@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'History Transaksi')
+@section('title', 'History Pengiriman')
 
 @push('style')
     <!-- CSS Libraries -->
@@ -12,7 +12,7 @@
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h1>History Transaksi Pembayaran Sukses</h1>
+                <h1>History Pengiriman Pesanan</h1>
 
             </div>
             <div class="section-body">
@@ -21,13 +21,13 @@
                         @include('layouts.alert')
                     </div>
                 </div>
-                <h2 class="section-title">History Transaksi Pembayaran Sukses</h2>
+                <h2 class="section-title">History Pesanan dikirim</h2>
 
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>All History Transaksi Pembayaran Sukses</h4>
+                                <h4>All History Transaksi Pesanan dikirim dan diterima</h4>
                             </div>
                             <div class="card-body">
                                 <div class="float-right">
@@ -53,7 +53,7 @@
                                         <th>Nama Penerima</th>
                                         <th>No Hp</th>
                                         <th>Alamat</th>
-                                        <th>Status</th>
+                                        <th>Keterangan</th>
                                     </tr>
 
                                     @php($i = 1)
@@ -64,7 +64,7 @@
                                         <td>{{ $pesan->nama_penerima }}</td>
                                         <td>{{ $pesan->no_hp }}</td>
                                         <td>{{ $pesan->alamat }}</td>
-                                        <td>{{ $pesan->status }}</td>
+                                        <td>{{ $pesan->keterangan }}</td>
                                         </tr>
                                      @endforeach
 

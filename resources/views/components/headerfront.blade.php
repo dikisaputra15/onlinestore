@@ -1,6 +1,6 @@
 	<!-- Header -->
 	<header class="header shop">
-		
+
 		<div class="middle-inner">
 			<div class="container">
 				<div class="row">
@@ -69,7 +69,7 @@
                                             <i class="ti-user"></i> <a href="{{route('register')}}">Register</a>
                                         </div>
                                     @endif
-                                
+
                                 @endauth
                             </div>
                         </div>
@@ -100,16 +100,16 @@
 							<div class="menu-area">
 								<!-- Main Menu -->
 								<nav class="navbar navbar-expand-lg">
-									<div class="navbar-collapse">	
-										<div class="nav-inner">	
+									<div class="navbar-collapse">
+										<div class="nav-inner">
 											<ul class="nav main-menu menu navbar-nav">
-													<li class="active"><a href="/">Home</a></li>												
+													<li class="active"><a href="/">Home</a></li>
 													<li><a href="/contact">Contact Us</a></li>
 												</ul>
 										</div>
 									</div>
 								</nav>
-								<!--/ End Main Menu -->	
+								<!--/ End Main Menu -->
 							</div>
 						</div>
 					</div>

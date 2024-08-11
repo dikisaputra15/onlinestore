@@ -49,7 +49,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="/admintransaksi" class="nav-link"><i class="fas fa-th-large"></i><span>Data Pengiriman</span></a>
+                <a href="/adminpengiriman" class="nav-link"><i class="fas fa-th-large"></i><span>Data Pengiriman</span></a>
             </li>
 
             <li class="nav-item">

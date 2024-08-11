@@ -4,7 +4,7 @@
 
 @push('style')
     <script type="text/javascript"
-		src="https://app.sandbox.midtrans.com/snap/snap.js"
+		src="{{config('midtrans.snap_url')}}"
     data-client-key="{{config('midtrans.client_key')}}"></script>
 @endpush
 
@@ -80,6 +80,7 @@
 
 							</div>
 
+                        <?php if($pesanan->status == 'Unpaid'){ ?>
                             <div class="single-widget get-button">
 								<div class="content">
 
@@ -89,7 +90,9 @@
 
 								</div>
 							</div>
-
+                        <?php }else{ ?>
+                            <h3>Sudah dibayar</h3>
+                        <?php } ?>
 
 							<!--/ End Button Widget -->
 						</div>

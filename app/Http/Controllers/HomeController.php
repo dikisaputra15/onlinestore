@@ -41,9 +41,23 @@ class HomeController extends Controller
             ->when($request->input('name'), function($query, $name){
                 return $query->where('nama_penerima', 'like', '%'.$name.'%');
             })
+            ->where('status', 'Paid')
             ->orderBy('id', 'desc')
             ->paginate(10);
         return view('pages.pesanan.transaksi', compact('pesanans'));
+    }
+
+    public function adminpengiriman(Request $request)
+    {
+         $pesanans = DB::table('pesanans')
+            ->when($request->input('name'), function($query, $name){
+                return $query->where('nama_penerima', 'like', '%'.$name.'%');
+            })
+            ->where('keterangan', 'dikirim')
+            ->orWhere('keterangan', 'diterima')
+            ->orderBy('id', 'desc')
+            ->paginate(10);
+        return view('pages.pesanan.pengiriman', compact('pesanans'));
     }
 
     public function formlappenjualan()
@@ -61,7 +75,13 @@ class HomeController extends Controller
         $start_date = $request->start_date;
         $end_date = $request->end_date;
 
-        $pesanans = Pesanan::whereBetween('tgl_pemesanan', [$start_date, $end_date])->where('status', 'Paid')->get();
+        $pesanans = DB::table('detailpesanans')
+            ->join('pesanans', 'pesanans.id', '=', 'detailpesanans.id_pesanan')
+            ->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+            ->select('detailpesanans.*', 'pesanans.*', 'produks.nama_produk')
+            ->whereBetween('pesanans.tgl_pemesanan', [$start_date, $end_date])
+            ->where('pesanans.status', 'Paid')
+            ->get();
         $total = Pesanan::whereBetween('tgl_pemesanan', [$start_date, $end_date])->where('status', 'Paid')->sum('total_bayar');
 
         $pdf = PDF::loadView('lappenjualanpdf', compact('pesanans','total'));
@@ -116,7 +136,7 @@ class HomeController extends Controller
     public function callback(Request $request)
     {
         $serverKey = config('midtrans.server_key');
-        $hashed = hash("sha512", $request->order_id.$request->status_code.$request->gross_amount.$serverKey); 
+        $hashed = hash("sha512", $request->order_id.$request->status_code.$request->gross_amount.$serverKey);
         if($hashed == $request->signature_key){
             if($request->transaction_status == 'capture'){
                 $order = Pesanan::find($request->order_id);

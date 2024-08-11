@@ -37,7 +37,7 @@
                                         <?php if($pesan->status == 'Unpaid'){ ?>
                                   		<a href="/invoice/{{$pesan->id}}/lihatinvoice"><u>Bayar</u></a>
                                         <?php }else{ ?>
-                                            <p>dibayar</p>
+                                            <a href="/invoice/{{$pesan->id}}/lihatinvoice"><u>Invoice</u></a>
                                         <?php } ?>
 										<?php if($pesan->keterangan == 'dikirim') { ?>
 											<a href="/konfirmasi/update/{{$pesan->id}}"><u>Konfirmasi</u></a>
