@@ -13,10 +13,10 @@
 					</div>
 				</div>
 				<div class="row">
-					
+
 					<div class="col-12">
 						<div class="product-info">
-							
+
 							<div class="tab-content" id="myTabContent">
 								<!-- Start Single Tab -->
 								<div class="tab-pane fade show active" id="man" role="tabpanel">
@@ -32,12 +32,16 @@
 														</div>
 														<div class="product-content">
 															<h3>{{$produk->nama_produk}}</h3>
+                                                            <div class="product-price">
+                                                                <p>Deskripsi:</p>
+                                                                <p>{{$produk->deskripsi_produk}}</p>
+                                                            </div>
 															<div class="product-price">
 																<span>Rp. {{$produk->harga}}</span>
 															</div>
 
 													<?php if($produk->stok < 1){ ?>
-							
+
 															<div class="row">
 																<div class="col-lg-3">
 																	<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
@@ -50,7 +54,7 @@
 																	<p style="color: red;">Produk Habis Silahkan PO</p>
 																</div>
 															</div>
-														
+
 													<?php }else{ ?>
 
 														<form action="/keranjang" method="POST">
@@ -70,11 +74,11 @@
 													</div>
 												</div>
 											@endforeach
-											
+
 										</div>
 									</div>
 								</div>
-						
+
 							</div>
 						</div>
 					</div>

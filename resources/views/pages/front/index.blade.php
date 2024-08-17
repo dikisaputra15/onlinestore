@@ -16,7 +16,7 @@
 								<div class="col-lg-7 col-12">
 									<div class="hero-text">
 										<h1><span>Selamat </span>Datang</h1>
-									
+
 									</div>
 								</div>
 							</div>
@@ -28,18 +28,18 @@
 		<!--/ End Single Slider -->
 	</section>
 	<!--/ End Slider Area -->
-	
+
 	<!-- Start Small Banner  -->
 	<section class="small-banner section">
 		<div class="container-fluid">
 			<div class="row">
-		
+
 				<div class="col-12">
 					<div class="section-title">
 						<h2>Produk Baru</h2>
 					</div>
 				</div>
-				
+
 			@foreach ($produks as $produk)
 				<div class="col-lg-4 col-md-6 col-12">
 					<div class="single-banner">
@@ -47,9 +47,11 @@
 						<div class="content">
 							<p>Produk Baru</p>
 							<h3>{{$produk->nama_produk}}</h3>
+							<p style="color:white;">Deskripsi:</p>
+							<p style="color:white;">{{$produk->deskripsi_produk}}</p>
 							<p>Rp. {{$produk->harga}}</p>
 							<?php if($produk->stok < 1){ ?>
-							
+
 								<div class="row">
 									<div class="col-lg-3">
 										<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
@@ -62,7 +64,7 @@
 										<p style="color: red;">Produk Habis Silahkan PO</p>
 									</div>
 								</div>
-							
+
 						<?php }else{ ?>
 							<form action="/keranjangnew" method="POST">
             					@csrf
@@ -82,13 +84,13 @@
 					</div>
 				</div>
 			@endforeach
-			
+
 			</div>
 		</div>
 
 	</section>
 	<!-- End Small Banner -->
-	
+
 	<!-- Start Most Popular -->
 	<div class="product-area most-popular section">
         <div class="container">
@@ -112,11 +114,13 @@
                             </div>
                             <div class="product-content">
                                 <h3>{{$item->nama_produk}}</h3>
+                                <p>Deskripsi:</p>
+                                <p>{{$item->deskripsi_produk}}</p>
                                 <div class="product-price">
                                     <span>Rp. {{$item->harga}}</span>
                                 </div>
                             <?php if($item->stok < 1){ ?>
-							
+
 								<div class="row">
 									<div>
 										<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
@@ -129,7 +133,7 @@
 									<div>
 										<p style="color: red;">Produk Habis Silahkan PO</p>
 									</div>
-						
+
 						<?php }else{ ?>
                                 <form action="/keranjang" method="POST">
             						@csrf
@@ -154,7 +158,7 @@
         </div>
     </div>
 	<!-- End Most Popular Area -->
-	
+
 	<!-- Start Shop Services Area -->
 	<section class="shop-services section home">
 		<div class="container">
@@ -199,7 +203,7 @@
 		</div>
 	</section>
 	<!-- End Shop Services Area -->
-    
+
 @endsection
 
 @push('scripts')
