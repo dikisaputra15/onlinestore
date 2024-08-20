@@ -7,9 +7,9 @@
 
 		<section class="shop checkout section mt-5">
 			<div class="container">
-				<div class="row"> 
+				<div class="row">
 					<div class="col-lg-4 col-12">
-						
+
 					</div>
 					<div class="col-lg-8 col-12">
 						<div class="order-details">
@@ -53,25 +53,28 @@
 									<input type="text" name="total_bayar" class="form-control" value="{{$total}}" hidden>
 									<div class="form-group">
 										<div class="col-lg-12 col-12">
-										<input type="text" name="nama_penerima" class="form-control" placeholder="Nama Penerima">
+                                        <label>Nama Penerima</label>
+										<input type="text" name="nama_penerima" class="form-control" required>
 										</div>
 									</div>
 
 									<div class="form-group">
 										<div class="col-lg-12 col-12">
-										<input type="text" name="no_hp" class="form-control" placeholder="No Handphone">
+                                        <label>No Handphone</label>
+										<input type="text" name="no_hp" class="form-control" required>
 										</div>
 									</div>
 
 									<div class="form-group">
 										<div class="col-lg-12 col-12">
-										<input type="text" name="alamat_lengkap" class="form-control" placeholder="Alamat Lengkap">
+                                        <label>Alamat Lengkap</label>
+										<input type="text" name="alamat_lengkap" class="form-control" required>
 										</div>
 									</div>
 								</div>
 
 							</div>
-							
+
 							<div class="single-widget get-button">
 								<div class="content">
 									<div class="button">
@@ -87,7 +90,7 @@
 			</div>
 		</section>
 		<!--/ End Checkout -->
-		
+
 @endsection
 
 @push('scripts')

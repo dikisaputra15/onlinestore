@@ -13,7 +13,7 @@
         <section class="section">
             <div class="section-header">
                 <h1>Po Masuk</h1>
-               
+
             </div>
             <div class="section-body">
                 <div class="row">
@@ -71,9 +71,8 @@
                                             <td>
                                                 <div class="d-flex justify-content-center">
                                                     <a href="/pomasuk/update/{{$pesan->id}}"
-                                                        class="btn btn-sm btn-info btn-icon">
-                                                        <i class="fas fa-edit"></i>
-                                                        Update
+                                                        class="btn btn-sm btn-info">
+                                                        Proses Pengiriman
                                                     </a>
                                                 </div>
                                             </td>
