@@ -2,170 +2,212 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pesanan;
+use App\Models\Detailpesanan;
+use App\Models\Produk;
 use Illuminate\Http\Request;
-use App\Models\Teknisi;
-use App\Models\Orderteknisi;
-use App\Models\Pembayaran;
-use App\Models\Trackingorder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use PDF;
 
 class PesananController extends Controller
 {
-     public function pesan($id)
+    public function index(Request $request)
     {
-         $teknisi = \App\Models\Teknisi::findOrFail($id);
-         $jenis = DB::table('jeniskerusakans')->orderBy('id', 'desc')->get();
-         $tarif = DB::table('tarifs')->orderBy('id', 'desc')->get();
-         return view('pages.pesanan.pesan', compact('teknisi','jenis','tarif'));
+    	$id = auth()->user()->id;
+    	$pesanans = Pesanan::where('id_user', $id)
+				    ->orderBy('created_at', 'desc')
+				    ->take(20)
+				    ->get();
+    	 return view('pages.pesanan.index', compact('pesanans'));
     }
 
-     public function prosespesan(Request $request)
+    public function checkout()
     {
-         $tgl = Carbon::now();
-        $tgl_now = $tgl->format('Y-m-d');
 
-         Orderteknisi::create([
-            'teknisi_id' => $request->teknisi_id,
-            'user_id' => auth()->user()->id,
-            'tarif_id' => $request->tarif_id,
-            'jenis_kerusakan_id' => $request->jenis_kerusakan_id,
-            'tgl_order' => $tgl_now,
-            'nama_pelanggan' => $request->nama_pemesan,
-            'alamat_pelanggan' => $request->alamat,
-            'pelanggan_latitude' => $request->pelanggan_latitude,
-            'pelanggan_longitude' => $request->pelanggan_longitude,
+    	$id = auth()->user()->id;
+    	$keranjangs = DB::table('keranjangs')
+    	->join('produks', 'produks.id', '=', 'keranjangs.id_produk')
+    	->select('keranjangs.*', 'produks.nama_produk')
+    	->where('keranjangs.id_user', $id)
+    	->orderBy('keranjangs.id', 'desc')->get();
+
+    	$total = DB::table('keranjangs')
+    	->where('keranjangs.id_user', $id)
+    	->sum('sub_total');
+    	return view('pages.pesanan.checkout', compact('keranjangs','total'));
+    }
+
+    public function storepesanan(Request $request)
+    {
+    	$tgl = Carbon::now();
+        $tgl_now = $tgl->format('Y-m-d');
+        $id_user = auth()->user()->id;
+
+        $pesan = Pesanan::create([
+            'id_user' => $id_user,
+            'tgl_pemesanan' => $tgl_now,
+            'nama_penerima' => $request->nama_penerima,
             'no_hp' => $request->no_hp,
-            'deskripsi' => $request->deskripsi,
-            'total_biaya' => $request->total_biaya,
-            'status_order' => 'unpaid',
+            'alamat' => $request->alamat_lengkap,
+            'total_bayar' => $request->total_bayar,
+            'status' => 'Unpaid',
+            'keterangan' => 'diproses'
         ]);
 
-         return redirect('myorder')->with('alert-primary','Data Berhasil dikirim');
+        if($pesan){
+        	$last_id = Pesanan::latest()->first();
+            $pesan_id = $last_id->id;
+            $keranjangs = DB::table('keranjangs')
+                        ->where('id_user', $id_user)
+                        ->get();
+            foreach ($keranjangs as $keranjang) {
+                Detailpesanan::create([
+                    'id_pesanan' => $pesan_id,
+                    'id_user' => $id_user,
+                    'id_produk' => $keranjang->id_produk,
+                    'qty' => $keranjang->qty,
+                    'harga_bayar' => $keranjang->harga,
+                    'sub_total' => $keranjang->sub_total
+                ]);
+
+                DB::table('produks')
+			    ->where('id', $keranjang->id_produk)
+			    ->decrement('stok', $keranjang->qty);
+            }
+
+            DB::table('keranjangs')->where('id_user',$id_user)->delete();
+
+        }
+
+         return redirect("/pesanan");
+
     }
 
-    public function formbayar($id)
+    public function lihatinvoice($id)
     {
-         $order = \App\Models\Orderteknisi::findOrFail($id);
-          return view('pages.pesanan.formbayar', compact('order'));
+        $id_user = auth()->user()->id;
+
+    	$pesanan = \App\Models\Pesanan::findOrFail($id);
+
+         // Set your Merchant Server Key
+         \Midtrans\Config::$serverKey = config('midtrans.server_key');
+         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+         \Midtrans\Config::$isProduction = config('midtrans.is_production');
+         // Set sanitization on (default)
+         \Midtrans\Config::$isSanitized = true;
+         // Set 3DS transaction for credit card to true
+         \Midtrans\Config::$is3ds = true;
+
+         $params = array(
+             'transaction_details' => array(
+                 'order_id' => $pesanan->id,
+                 'gross_amount' => $pesanan->total_bayar,
+             ),
+             'customer_details' => array(
+                 'name' => $pesanan->nama_penerima,
+             ),
+         );
+
+         $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+    	$details = DB::table('detailpesanans')
+		    	->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+		    	->select('detailpesanans.*', 'produks.nama_produk', 'produks.path_gambar')
+		    	->where('detailpesanans.id_pesanan', $id)
+		    	->where('detailpesanans.id_user', $id_user)
+		    	->orderBy('detailpesanans.id', 'desc')->get();
+    	return view('pages.pesanan.invoice', compact('snapToken', 'pesanan','details'));
     }
 
-     public function prosesbayar(Request $request)
-    {   $orderid = $request->order_id;
-        $tgl = Carbon::now();
+    public function invoicedetail($id)
+    {
+        $id_user = auth()->user()->id;
+
+    	$pesanan = \App\Models\Pesanan::findOrFail($id);
+
+    	$details = DB::table('detailpesanans')
+		    	->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+		    	->select('detailpesanans.*', 'produks.nama_produk', 'produks.path_gambar')
+		    	->where('detailpesanans.id_pesanan', $id)
+		    	->where('detailpesanans.id_user', $id_user)
+		    	->orderBy('detailpesanans.id', 'desc')->get();
+    	return view('pages.pesanan.invoicedetail', compact('pesanan','details'));
+    }
+
+    public function bayar($id)
+    {
+    	$id = auth()->user()->id;
+    	$pesanan = \App\Models\Pesanan::findOrFail($id);
+    	$details = DB::table('detailpesanans')
+		    	->join('produks', 'produks.id', '=', 'detailpesanans.id_produk')
+		    	->select('detailpesanans.*', 'produks.nama_produk', 'produks.path_gambar')
+		    	->where('detailpesanans.id_user', $id)
+		    	->orderBy('detailpesanans.id', 'desc')->get();
+
+
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => $pesanan->id,
+                'gross_amount' => $pesanan->total_bayar,
+            ),
+            'customer_details' => array(
+                'name' => $pesanan->nama_penerima,
+            ),
+        );
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+    	return view('pages.pesanan.bayar', compact('snapToken','pesanan','details'));
+    }
+
+     public function formpo($id)
+    {
+    	$produk = \App\Models\Produk::findOrFail($id);
+    	return view('pages.pesanan.formpo', compact('produk'));
+    }
+
+     public function storepo(Request $request)
+    {
+    	$tgl = Carbon::now();
         $tgl_now = $tgl->format('Y-m-d');
-        $pay_id = 'ORDER-' . time();
-         if($request->metode_pembayaran == 'Cash'){
-               $bayar =  Pembayaran::create([
-                    'order_id' => $orderid,
-                    'pay_id' => $pay_id,
-                    'tgl_pembayaran' => $tgl_now,
-                    'total_bayar' => $request->total_bayar,
-                    'status' => 'paid',
-                    'snap_token' => NULL,
-                    'metode_pembayaran' => $request->metode_pembayaran,
-                 ]);
+        $id_user = auth()->user()->id;
+        $total_bayar = $request->harga * $request->qty;
+        $id_produk = $request->id_produk;
 
-                 if($bayar){
-                    DB::table('orderteknisis')
-                        ->where('id', $orderid)
-                        ->update(['status_order' => 'paid']);
+        $pesan = Pesanan::create([
+            'id_user' => $id_user,
+            'tgl_pemesanan' => $tgl_now,
+            'nama_penerima' => $request->nama_penerima,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat_lengkap,
+            'total_bayar' => $total_bayar,
+            'status' => 'Unpaid',
+            'keterangan' => 'po'
+        ]);
 
-                     Trackingorder::create([
-                        'order_teknisi_id' => $orderid,
-                        'status' => 'menunggu teknisi',
-                    ]);
-                 }
-         }else{
-            echo "qris";
-         }
+        if($pesan){
+        	$last_id = Pesanan::latest()->first();
+            $pesan_id = $last_id->id;
 
-         return redirect('myorder')->with('alert-primary','Data Berhasil dikirim');
-    }
+                Detailpesanan::create([
+                    'id_pesanan' => $pesan_id,
+                    'id_user' => $id_user,
+                    'id_produk' => $id_produk,
+                    'qty' => $request->qty,
+                    'harga_bayar' => $request->harga,
+                    'sub_total' => $total_bayar
+                ]);
 
-     public function pesananmasuk(Request $request)
-    {
-        $data = DB::table('orderteknisis')
-            ->join('trackingorders', 'trackingorders.order_teknisi_id', '=', 'orderteknisis.id')
-            ->join('teknisis', 'teknisis.id', '=', 'orderteknisis.teknisi_id')
-            ->join('users', 'users.id', '=', 'orderteknisis.user_id')
-            ->join('jeniskerusakans', 'jeniskerusakans.id', '=', 'orderteknisis.jenis_kerusakan_id')
-            ->join('tarifs', 'tarifs.id', '=', 'orderteknisis.tarif_id')
-            ->select('trackingorders.id','orderteknisis.nama_pelanggan', 'orderteknisis.alamat_pelanggan', 'orderteknisis.total_biaya', 'teknisis.name', 'tarifs.nama_jasa', 'tarifs.tarif_antar', 'jeniskerusakans.jenis_kerusakan', 'jeniskerusakans.biaya', 'trackingorders.status')
-            ->get();
-
-         return view('pages.pesanan.pesananmasuk', compact('data'));
-    }
-
-     public function formupdatestatus($id)
-    {
-         $order = \App\Models\Trackingorder::findOrFail($id);
-          return view('pages.pesanan.formupdatestatus', compact('order'));
-    }
-
-     public function prosesstatus(Request $request)
-    {
-         DB::table('trackingorders')
-                        ->where('id', $request->id_track)
-                        ->update(['status' => $request->status]);
-         return redirect('pesananmasuk')->with('alert-primary','Data Berhasil dikirim');
-    }
-
-     public function dataservice(Request $request)
-    {
-        $data = DB::table('orderteknisis')
-            ->join('trackingorders', 'trackingorders.order_teknisi_id', '=', 'orderteknisis.id')
-            ->join('teknisis', 'teknisis.id', '=', 'orderteknisis.teknisi_id')
-            ->join('users', 'users.id', '=', 'orderteknisis.user_id')
-            ->join('jeniskerusakans', 'jeniskerusakans.id', '=', 'orderteknisis.jenis_kerusakan_id')
-            ->join('tarifs', 'tarifs.id', '=', 'orderteknisis.tarif_id')
-            ->select('trackingorders.id','orderteknisis.nama_pelanggan', 'orderteknisis.alamat_pelanggan', 'orderteknisis.total_biaya', 'teknisis.name', 'tarifs.nama_jasa', 'tarifs.tarif_antar', 'jeniskerusakans.jenis_kerusakan', 'jeniskerusakans.biaya', 'trackingorders.status')
-            ->where('trackingorders.status', 'selesai')
-            ->get();
-
-         return view('pages.pesanan.dataservice', compact('data'));
-    }
-
-     public function invoice($id)
-    {
-        $dat = DB::table('orderteknisis')
-            ->join('trackingorders', 'trackingorders.order_teknisi_id', '=', 'orderteknisis.id')
-            ->join('teknisis', 'teknisis.id', '=', 'orderteknisis.teknisi_id')
-            ->join('users', 'users.id', '=', 'orderteknisis.user_id')
-            ->join('jeniskerusakans', 'jeniskerusakans.id', '=', 'orderteknisis.jenis_kerusakan_id')
-            ->join('tarifs', 'tarifs.id', '=', 'orderteknisis.tarif_id')
-            ->select('trackingorders.id','orderteknisis.nama_pelanggan', 'orderteknisis.alamat_pelanggan', 'orderteknisis.total_biaya', 'teknisis.name', 'tarifs.nama_jasa', 'tarifs.tarif_antar', 'jeniskerusakans.jenis_kerusakan', 'jeniskerusakans.biaya', 'trackingorders.status')
-            ->where('trackingorders.id', $id)
-            ->first();
-
-        return view('pages.pesanan.invoice', compact('dat'));
-    }
-
-     public function formlapor(Request $request)
-    {
-          return view('pages.pesanan.formlapor');
-    }
-
-     public function lihatpdf(Request $request)
-    {
-         $start_date = $request->start_date;
-        $end_date = $request->end_date;
-
-         $pesanans = DB::table('orderteknisis')
-            ->join('trackingorders', 'trackingorders.order_teknisi_id', '=', 'orderteknisis.id')
-            ->join('teknisis', 'teknisis.id', '=', 'orderteknisis.teknisi_id')
-            ->join('users', 'users.id', '=', 'orderteknisis.user_id')
-            ->join('jeniskerusakans', 'jeniskerusakans.id', '=', 'orderteknisis.jenis_kerusakan_id')
-            ->join('tarifs', 'tarifs.id', '=', 'orderteknisis.tarif_id')
-            ->select('trackingorders.id', 'orderteknisis.tgl_order', 'orderteknisis.nama_pelanggan', 'orderteknisis.alamat_pelanggan', 'orderteknisis.total_biaya', 'orderteknisis.status_order', 'teknisis.name', 'tarifs.nama_jasa', 'tarifs.tarif_antar', 'jeniskerusakans.jenis_kerusakan', 'jeniskerusakans.biaya', 'trackingorders.status')
-            ->where('orderteknisis.status_order', 'paid')
-            ->whereBetween('orderteknisis.tgl_order', [$start_date, $end_date])
-            ->get();
-
-         $pdf = PDF::loadView('lappenjualanpdf', compact('pesanans'));
-        $pdf->setPaper('A4', 'potrait');
-        return $pdf->stream('lappenjualanpdf.pdf');
+        }
+        return redirect("/pesanan");
     }
 }

@@ -6,67 +6,75 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users = DB::table('users')->orderBy('id', 'desc')->get();
+        //$users = \App\Models\User::paginate(10);
+        $users = DB::table('users')
+            ->when($request->input('name'), function($query, $name){
+                return $query->where('name', 'like', '%'.$name.'%');
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(10);
         return view('pages.users.index', compact('users'));
     }
 
     public function create()
     {
-        $roles = Role::pluck('name');
-        return view('pages.users.create', compact('roles'));
+        return view('pages.users.create');
     }
 
     public function store(Request $request)
     {
-        $user = User::create([
+        $au = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password)
         ]);
 
-        $user->assignRole($request->role);
+        if($request->roles == 'admin'){
+            $au->assignRole('admin');
+        }else if($request->roles == 'user'){
+            $au->assignRole('user');
+        }else{
+            $au->assignRole('owner');
+        }
 
-        return redirect()->route('user.index')->with('alert-primary','Data Berhasil ditambah');
+        return redirect()->route('user.index')->with('success', 'User successfully created');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('user.index')->with('alert-danger','Data Berhasil dihapus');
+        return redirect()->route('user.index')->with('success', 'User successfully deleted');
     }
 
     public function edit($id)
     {
         $user = \App\Models\User::findOrFail($id);
-        $roles = Role::pluck('name');
-        return view('pages.users.edit', compact('user','roles'));
+        return view('pages.users.edit', compact('user'));
     }
 
-   public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|string|min:6|confirmed',
-        ]);
+        if($request->password != ''){
+           $au = DB::table('users')->where('id',$id)->update([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password)
+            ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+        }else{
+           $au = DB::table('users')->where('id',$id)->update([
+                'name' => $request->name,
+                'email' => $request->email
+            ]);
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
         }
 
-        $user->save();
-        $user->syncRoles([$request->role]);
 
-        return redirect()->route('user.index')->with('alert-primary', 'User successfully updated');
+        return redirect()->route('user.index')->with('success', 'User successfully updated');
     }
-
 }

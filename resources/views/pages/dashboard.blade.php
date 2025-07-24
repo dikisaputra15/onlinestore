@@ -1,69 +1,68 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
-@section('title','Dashboard')
+@section('title', 'Dashboard')
 
-@section('conten')
+@push('style')
+    <!-- CSS Libraries -->
+    <link rel="stylesheet"
+        href="{{ asset('library/jqvmap/dist/jqvmap.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('library/summernote/dist/summernote-bs4.min.css') }}">
+@endpush
 
-<div class="card">
-    <div class="card-header bg-white">
-        <h3 style="text-align: center;">Selamat Datang</h3>
-        <h3 style="text-align: center;">Dashboard Go Service Sistem</h3>
+@section('main')
+    <div class="main-content">
+        <section class="section">
+            <div class="section-header">
+                <h1>Dashboard Admin</h1>
+            </div>
+
+            <div class="row">
+                
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-danger">
+                            <i class="far fa-newspaper"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <a href="/pesananmasuk"><h4>Pesanan Masuk</h4></a>
+                            </div>
+                            <div class="card-body">
+                                {{$pesananmasuk}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="card card-statistic-1">
+                        <div class="card-icon bg-warning">
+                            <i class="far fa-file"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <a href="/pomasuk"><h4>PO Masuk</h4></a>
+                            </div>
+                            <div class="card-body">
+                                {{$pomasuk}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+
+        </section>
     </div>
-    <div class="card-body">
-         <div class="row">
-
-                <div class="col-lg-4 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>{{$tempatservice}}</h3>
-
-                <p>Tempat Service</p>
-              </div>
-              <div class="icon">
-                 <i class="ion ion-pie-graph"></i>
-              </div>
-
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-4 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>{{$unpaid}}</h3>
-
-                <p>Pesanan dikerjakan</p>
-              </div>
-              <div class="icon">
-                 <i class="ion ion-pie-graph"></i>
-              </div>
-
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-4 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>{{$paid}}</h3>
-
-                <p>Pesanan Selesai</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-
-            </div>
-          </div>
-
-         </div>
-    </div>
-</div>
-
-
 @endsection
 
-@push('service')
+@push('scripts')
+    <!-- JS Libraies -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="{{ asset('library/summernote/dist/summernote-bs4.min.js') }}"></script>
+    <script src="{{ asset('library/chocolat/dist/js/jquery.chocolat.min.js') }}"></script>
+
+    <!-- Page Specific JS File -->
+    <script src="{{ asset('js/page/index-0.js') }}"></script>
 
 @endpush

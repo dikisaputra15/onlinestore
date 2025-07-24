@@ -1,75 +1,102 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
-@section('title','Data Lokasi')
+@section('title', 'Pesanan Masuk')
 
-@section('conten')
+@push('style')
+    <!-- CSS Libraries -->
+    <link rel="stylesheet"
+        href="{{ asset('library/selectric/public/selectric.css') }}">
+@endpush
 
-<x-alert></x-alert>
-<div class="card">
-    <div class="card-header bg-white">
-        <h3>Data Pesanan Masuk</h3>
-    </div>
-    <div class="card-body">
+@section('main')
+    <div class="main-content">
+        <section class="section">
+            <div class="section-header">
+                <h1>Pesanan Masuk</h1>
 
-    <table id="example" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                        <th>No</th>
-                        <th>Tempat Service</th>
-                        <th>Nama Pelanggan</th>
-                        <th>Jenis Kerusakan</th>
-                        <th>Biaya</th>
-                        <th>Jasa Antar</th>
-                        <th>Tarif Jemput</th>
-                        <th>Total Biaya</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    @php
-                        $no=1;
-                    @endphp
-                  @foreach ($data as $dat)
-                    <tr>
-                        <td>{{$no++}}</td>
-                        <td>{{$dat->name}}</td>
-                        <td>{{$dat->nama_pelanggan}}</td>
-                        <td>{{$dat->jenis_kerusakan}}</td>
-                        <td>{{$dat->biaya}}</td>
-                        <td>{{$dat->nama_jasa}}</td>
-                        <td>{{$dat->tarif_antar}}</td>
-                        <td>{{$dat->total_biaya}}</td>
-                        <td>{{$dat->status}}</td>
-                        <td>
-                            <div class="d-flex justify-content-center">
-                                <?php if($dat->status != 'selesai') {?>
-                                <a href="/pesan/{{$dat->id}}/updatestatus"
-                                    class="btn btn-sm btn-info">
-                                    update status
-                                </a>
-                                <?php }else{ ?>
-                                    <p>selesai</p>
-                                <?php } ?>
+            </div>
+            <div class="section-body">
+                <div class="row">
+                    <div class="col-12">
+                        @include('layouts.alert')
+                    </div>
+                </div>
+                <h2 class="section-title">Pesanan Masuk</h2>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Pesanan Masuk</h4>
                             </div>
-                        </td>
-                    </tr>
-                @endforeach
-                  </tbody>
-    </table>
+                            <div class="card-body">
+                                <div class="float-right">
+                                    <form method="GET" action="/pesananmasuk">
+                                        <div class="input-group">
+                                            <input type="text"
+                                                class="form-control"
+                                                placeholder="Search" name="name">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="clearfix mb-3"></div>
+
+                                <div class="table-responsive">
+                                    <table class="table-striped table">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tgl Pesanan</th>
+                                        <th>Nama Penerima</th>
+                                        <th>No Hp</th>
+                                        <th>Alamat</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                    @php($i = 1)
+                                    @foreach ($pesananmasuks as $pesan)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ $pesan->tgl_pemesanan }}</td>
+                                            <td>{{ $pesan->nama_penerima }}</td>
+                                            <td>{{ $pesan->no_hp }}</td>
+                                            <td>{{ $pesan->alamat }}</td>
+                                            <td>{{ $pesan->status }}</td>
+                                            <td>{{ $pesan->keterangan }}</td>
+                                            <td>
+                                                <div class="d-flex justify-content-center">
+                                                    <a href="/pesananmasuk/update/{{$pesan->id}}"
+                                                        class="btn btn-sm btn-info">
+                                                        Proses Pengiriman
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                     @endforeach
+
+                                    </table>
+                                </div>
+                                <div class="float-right">
+                                    {{$pesananmasuks->withQueryString()->links()}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-</div>
-
-
 @endsection
 
-@push('service')
-<script>
-  $(function () {
-    $("#example").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-  });
-</script>
+@push('scripts')
+    <!-- JS Libraies -->
+    <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
+
+    <!-- Page Specific JS File -->
+    <script src="{{ asset('js/page/features-posts.js') }}"></script>
 @endpush

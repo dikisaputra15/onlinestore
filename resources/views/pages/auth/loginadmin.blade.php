@@ -1,50 +1,84 @@
-@extends('layouts.authmaster')
+@extends('layouts.auth')
 
-@section('title','Login')
+@section('title', 'Login')
 
-@section('conten')
+@push('style')
+    <!-- CSS Libraries -->
+    <link rel="stylesheet"
+        href="{{ asset('library/bootstrap-social/bootstrap-social.css') }}">
+@endpush
 
-<div class="login-box">
-  <!-- /.login-logo -->
-  <div class="card card-outline card-primary">
-    <div class="card-header text-center">
-      <a href="#" class="h1"><b>Login</b></a>
-    </div>
-    <div class="card-body">
-
-      <form action="{{route('login')}}" method="post">
-      @csrf
-        <div class="input-group mb-3">
-          <input type="email" class="form-control" name="email" placeholder="Email" required>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
-            </div>
-          </div>
-        </div>
-        <div class="input-group mb-3">
-          <input type="password" class="form-control" name="password" placeholder="Password" required>
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-8">
-          </div>
-          <!-- /.col -->
-          <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-          </div>
-          <!-- /.col -->
-        </div>
-      </form>
-
-    </div>
-    <!-- /.card-body -->
-  </div>
-  <!-- /.card -->
+@section('main')
+<div class="login-brand">
+    <img src="{{ asset('img/logo.jpg') }}"
+        alt="logo"
+        width="300 px"
+        class="shadow-light">
 </div>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h4>Login</h4>
+        </div>
+
+        <div class="card-body">
+            <form method="POST"
+                action="{{route('login')}}"
+                class="needs-validation"
+                novalidate="">
+            @csrf
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email"
+                        type="email"
+                        class="form-control @error('email')
+                            is-invalid
+                        @enderror"
+                        name="email"
+                        tabindex="1"
+                        autofocus>
+                        @error('email')
+                        <div class="invalid-feedback">
+                            {{$message}}
+                        </div>
+                        @enderror
+                </div>
+
+                <div class="form-group">
+                    <div class="d-block">
+                        <label for="password"
+                            class="control-label">Password</label>
+                    </div>
+                    <input id="password"
+                        type="password"
+                        class="form-control @error('password')
+                            is-invalid
+                        @enderror"
+                        name="password"
+                        tabindex="2">
+                        @error('password')
+                        <div class="invalid-feedback">
+                            {{$message}}
+                        </div>
+                        @enderror
+
+                </div>
+
+                <div class="form-group">
+                    <button type="submit"
+                        class="btn btn-primary btn-lg btn-block"
+                        tabindex="4">
+                        Login
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
 
 @endsection
+
+@push('scripts')
+    <!-- JS Libraies -->
+
+    <!-- Page Specific JS File -->
+@endpush

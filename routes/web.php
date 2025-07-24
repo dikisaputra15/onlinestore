@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LokasiteknisiController;
-use App\Http\Controllers\TarifController;
-use App\Http\Controllers\JeniskerusakanController;
+use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\PesananController;
+use App\Http\Controllers\PembayaranController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +25,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-Route::get('/api/teknisi', [HomeController::class, 'getTeknisi']);
+Route::get('/kategori/{id}/pilihkategori', [App\Http\Controllers\KategoriController::class, 'pilihkategori']);
+Route::post('/cariproduk', [App\Http\Controllers\ProdukController::class, 'cariproduk']);
+Route::get('/contact', [App\Http\Controllers\HomeController::class, 'contact']);
 
 Route::get('/Alllogin', function () {
     return view('pages.auth.loginadmin');
@@ -36,22 +39,32 @@ Route::middleware(['auth'])->group(function () {
     // })->name('dashboard');
 
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'dashboard'])->name('dashboard');
-    Route::get('/itservice', [App\Http\Controllers\HomeController::class, 'itservice']);
-    Route::get('/tracking-teknisi', [App\Http\Controllers\HomeController::class, 'tracking']);
-    Route::get('/myorder', [App\Http\Controllers\HomeController::class, 'myorder']);
-    Route::get('/teknisi/{id}/pesan', [App\Http\Controllers\PesananController::class, 'pesan']);
-    Route::post('/proses-pesan-teknisi', [App\Http\Controllers\PesananController::class, 'prosespesan']);
-    Route::get('/pesan/{id}/bayar', [App\Http\Controllers\PesananController::class, 'formbayar']);
-    Route::post('/proses-pembayaran', [App\Http\Controllers\PesananController::class, 'prosesbayar']);
-    Route::get('/pesananmasuk', [App\Http\Controllers\PesananController::class, 'pesananmasuk']);
-    Route::get('/pesan/{id}/updatestatus', [App\Http\Controllers\PesananController::class, 'formupdatestatus']);
-    Route::post('/prosesstatus', [App\Http\Controllers\PesananController::class, 'prosesstatus']);
-    Route::get('/dataservice', [App\Http\Controllers\PesananController::class, 'dataservice']);
-    Route::get('/pesan/{id}/invoice', [App\Http\Controllers\PesananController::class, 'invoice']);
-    Route::get('/laporan', [App\Http\Controllers\PesananController::class, 'formlapor']);
-    Route::post('/pdfpenjualan', [App\Http\Controllers\PesananController::class, 'lihatpdf']);
+    Route::get('/owner', [App\Http\Controllers\HomeController::class, 'owner'])->name('owner');
+    Route::get('/admintransaksi', [App\Http\Controllers\HomeController::class, 'admintransaksi']);
+    Route::get('/adminpengiriman', [App\Http\Controllers\HomeController::class, 'adminpengiriman']);
+    Route::get('/lappenjualan', [App\Http\Controllers\HomeController::class, 'formlappenjualan']);
+    Route::get('/lappenjualanowner', [App\Http\Controllers\HomeController::class, 'formlappenjualanowner']);
+    Route::post('/pdfpenjualan', [App\Http\Controllers\HomeController::class, 'lihatpdf']);
+    Route::get('/pesananmasuk', [App\Http\Controllers\HomeController::class, 'pesananmasuk']);
+    Route::get('/pomasuk', [App\Http\Controllers\HomeController::class, 'pomasuk']);
+    Route::get('/pesananmasuk/update/{id}', [App\Http\Controllers\HomeController::class, 'updatepesananmasuk']);
+    Route::get('/pomasuk/update/{id}', [App\Http\Controllers\HomeController::class, 'updatepomasuk']);
+    Route::get('/konfirmasi/update/{id}', [App\Http\Controllers\HomeController::class, 'updatekonfirmasi']);
+
     Route::resource('user', UserController::class);
-    Route::resource('lokasi', LokasiteknisiController::class);
-    Route::resource('tarif', TarifController::class);
-    Route::resource('jeniskerusakan', JeniskerusakanController::class);
+    Route::resource('kategori', KategoriController::class);
+    Route::resource('produk', ProdukController::class);
+
+    Route::post('/keranjang', [App\Http\Controllers\KeranjangController::class, 'storekeranjang']);
+    Route::post('/keranjangnew', [App\Http\Controllers\KeranjangController::class, 'storekeranjangnew']);
+    Route::get('/allkeranjang', [App\Http\Controllers\KeranjangController::class, 'index']);
+    Route::get('/keranjang/delker/{id}', [App\Http\Controllers\KeranjangController::class, 'destroykeranjang']);
+    Route::get('/pesanan', [App\Http\Controllers\PesananController::class, 'index']);
+    Route::get('/checkout', [App\Http\Controllers\PesananController::class, 'checkout']);
+    Route::post('/prosespesanan', [App\Http\Controllers\PesananController::class, 'storepesanan']);
+    Route::get('/invoice/{id}/lihatinvoice', [App\Http\Controllers\PesananController::class, 'lihatinvoice']);
+    Route::get('/invoice/{id}/invoicedetail', [App\Http\Controllers\PesananController::class, 'invoicedetail']);
+    Route::get('/pembayaran/{id}/bayar', [App\Http\Controllers\PesananController::class, 'bayar']);
+    Route::get('/po/{id}/formpo', [App\Http\Controllers\PesananController::class, 'formpo']);
+    Route::post('/prosespo', [App\Http\Controllers\PesananController::class, 'storepo']);
 });

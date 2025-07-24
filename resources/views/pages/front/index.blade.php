@@ -2,172 +2,210 @@
 
 @section('title', 'Hompe Page')
 
-@push('style')
-<style>
-    .form-label {
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-        color: #333;
-    }
-    .mb-3 {
-        margin-bottom: 1rem;
-    }
-    .d-flex.align-items-end {
-        display: flex;
-        align-items: flex-end;
-    }
-    .form-control, .btn {
-        border-radius: 0.375rem;
-    }
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-    .btn-outline-secondary {
-        border-color: #6c757d;
-        color: #6c757d;
-    }
-</style>
-@endpush
-
 @section('main')
 
-<main class="main">
+<!-- Slider Area -->
+<section class="hero-slider">
+		<!-- Single Slider -->
+		<div class="single-slider">
+			<div class="container">
+				<div class="row no-gutters">
+					<div class="col-lg-9 offset-lg-3 col-12">
+						<div class="text-inner">
+							<div class="row">
+								<div class="col-lg-7 col-12">
+									<div class="hero-text">
+										<h1><span>Selamat </span>Datang</h1>
 
-</main>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--/ End Single Slider -->
+	</section>
+	<!--/ End Slider Area -->
+
+	<!-- Start Small Banner  -->
+	<section class="small-banner section">
+		<div class="container-fluid">
+			<div class="row">
+
+				<div class="col-12">
+					<div class="section-title">
+						<h2>Produk Baru</h2>
+					</div>
+				</div>
+
+			@foreach ($produks as $produk)
+				<div class="col-lg-4 col-md-6 col-12">
+					<div class="single-banner">
+						<img src="{{ Storage::url('gambarproduk/'.$produk->path_gambar) }}" style="height: 370px; width: 600px;">
+						<div class="content">
+							<p>Produk Baru</p>
+							<h3>{{$produk->nama_produk}}</h3>
+							<p style="color:white;">Deskripsi:</p>
+							<p style="color:white;">{{$produk->deskripsi_produk}}</p>
+							<p>Rp. {{$produk->harga}}</p>
+							<?php if($produk->stok < 1){ ?>
+
+								<div class="row">
+									<div class="col-lg-3">
+										<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
+										<input type="text" class="form-control" name="id_produk" value="{{$produk->id}}" hidden>
+									</div>
+									<div class="col-lg-9">
+										<a href="/po/{{$produk->id}}/formpo" class="btn" style="color: white;">PO</a>
+									</div>
+									<div>
+										<p style="color: red;">Produk Habis Silahkan PO</p>
+									</div>
+								</div>
+
+						<?php }else{ ?>
+							<form action="/keranjangnew" method="POST">
+            					@csrf
+								<div class="row">
+									<div class="col-lg-3">
+										<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
+										<input type="text" class="form-control" name="id_produk" value="{{$produk->id}}" hidden>
+										<input type="number" class="form-control" name="qty" placeholder="Qty">
+									</div>
+									<div class="col-lg-9">
+										<button class="btn btn-primary" style="color: white;">Add Chart</button>
+									</div>
+								</div>
+							</form>
+						<?php } ?>
+						</div>
+					</div>
+				</div>
+			@endforeach
+
+			</div>
+		</div>
+
+	</section>
+	<!-- End Small Banner -->
+
+	<!-- Start Most Popular -->
+	<div class="product-area most-popular section">
+        <div class="container">
+            <div class="row">
+				<div class="col-12">
+					<div class="section-title">
+						<h2>Item</h2>
+					</div>
+				</div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="owl-carousel popular-slider">
+
+						@foreach ($items as $item)
+						<div class="single-product">
+                            <div class="product-img">
+                                <a href="#">
+                                    <img class="default-img" src="{{ Storage::url('gambarproduk/'.$item->path_gambar) }}" alt="#" style="height: 350px; width: 250px;">
+                                </a>
+                            </div>
+                            <div class="product-content">
+                                <h3>{{$item->nama_produk}}</h3>
+                                <p>Deskripsi:</p>
+                                <p>{{$item->deskripsi_produk}}</p>
+                                <div class="product-price">
+                                    <span>Rp. {{$item->harga}}</span>
+                                </div>
+                            <?php if($item->stok < 1){ ?>
+
+								<div class="row">
+									<div>
+										<input type="text" class="form-control" name="harga" value="{{$produk->harga}}" hidden>
+										<input type="text" class="form-control" name="id_produk" value="{{$produk->id}}" hidden>
+									</div>
+									<div>
+										<a href="/po/{{$item->id}}/formpo" class="btn btn-primary" style="color: white;">PO</a>
+									</div>
+								</div>
+									<div>
+										<p style="color: red;">Produk Habis Silahkan PO</p>
+									</div>
+
+						<?php }else{ ?>
+                                <form action="/keranjang" method="POST">
+            						@csrf
+	                                <div>
+	                                	<input type="text" class="form-control" name="harga" value="{{$item->harga}}" hidden>
+										<input type="text" class="form-control" name="id_produk" value="{{$item->id}}" hidden>
+										<input type="number" class="form-control" name="qty" placeholder="Qty">
+	                            	</div><br>
+	                                <div>
+	                                	<button class="btn btn-primary" style="color: white;">Add Chart</button>
+	                            	</div>
+                            	 </form>
+                            <?php } ?>
+                            </div>
+                        </div>
+						@endforeach
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+	<!-- End Most Popular Area -->
+
+	<!-- Start Shop Services Area -->
+	<section class="shop-services section home">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-6 col-12">
+					<!-- Start Single Service -->
+					<div class="single-service">
+						<i class="ti-rocket"></i>
+						<h4>Free shiping</h4>
+						<p>Orders over $100</p>
+					</div>
+					<!-- End Single Service -->
+				</div>
+				<div class="col-lg-3 col-md-6 col-12">
+					<!-- Start Single Service -->
+					<div class="single-service">
+						<i class="ti-reload"></i>
+						<h4>Free Return</h4>
+						<p>Within 30 days returns</p>
+					</div>
+					<!-- End Single Service -->
+				</div>
+				<div class="col-lg-3 col-md-6 col-12">
+					<!-- Start Single Service -->
+					<div class="single-service">
+						<i class="ti-lock"></i>
+						<h4>Sucure Payment</h4>
+						<p>100% secure payment</p>
+					</div>
+					<!-- End Single Service -->
+				</div>
+				<div class="col-lg-3 col-md-6 col-12">
+					<!-- Start Single Service -->
+					<div class="single-service">
+						<i class="ti-tag"></i>
+						<h4>Best Peice</h4>
+						<p>Guaranteed price</p>
+					</div>
+					<!-- End Single Service -->
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Shop Services Area -->
 
 @endsection
 
 @push('scripts')
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
-<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.min.js"></script>
-
-<script>
-let map = L.map('map').setView([-6.1751, 106.8650], 13);
-let markers = [];
-let routingControl;
-let userLat = null, userLng = null;
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18
-}).addTo(map);
-
-function clearMap() {
-    markers.forEach(marker => map.removeLayer(marker));
-    markers = [];
-
-    if (routingControl) {
-        map.removeControl(routingControl);
-    }
-}
-
-function useMyLocation() {
-    navigator.geolocation.getCurrentPosition(pos => {
-        userLat = pos.coords.latitude;
-        userLng = pos.coords.longitude;
-        searchByCoordinates(userLat, userLng);
-    }, () => {
-        alert("Gagal mendapatkan lokasi. Coba izinkan akses lokasi.");
-    });
-}
-
-function searchLocation() {
-    const location = document.getElementById("locationSearch").value;
-    const radius = document.getElementById("radiusKm").value || 10;
-
-    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${location}`)
-        .then(res => res.json())
-        .then(data => {
-            if (!data.length) {
-                alert("Lokasi tidak ditemukan");
-                return;
-            }
-
-            const lat = parseFloat(data[0].lat);
-            const lng = parseFloat(data[0].lon);
-            userLat = lat;
-            userLng = lng;
-
-            searchByCoordinates(lat, lng);
-        });
-}
-
-function searchByCoordinates(lat, lng) {
-    const radius = document.getElementById("radiusKm").value || 10;
-    clearMap();
-
-    map.setView([lat, lng], 13);
-    const userMarker = L.marker([lat, lng]).addTo(map).bindPopup("Lokasi Anda").openPopup();
-    markers.push(userMarker);
-
-    fetch(`/api/teknisi?lat=${lat}&lng=${lng}&radius=${radius}`)
-        .then(res => res.json())
-        .then(techs => {
-            if (!techs.length) {
-                alert("Tidak ada teknisi dalam radius ini.");
-                return;
-            }
-
-            techs.forEach(tech => {
-                const marker = L.marker([tech.latitude, tech.longitude]).addTo(map);
-
-                const imageUrl = tech.image
-                    ? `${tech.image}`
-                    : 'https://via.placeholder.com/150x100?text=No+Image';
-
-                const wa = `https://wa.me/62${tech.phone.replace(/^0/, '')}`;
-                const popupContent = `
-                    <b>${tech.name}</b><br>
-                    Telp: ${tech.phone}<br>
-                    Jarak: ${tech.distance} km<br>
-                    <img src="${imageUrl}" alt="${tech.name}" width="100%" style="border-radius:6px;"><br>
-                    <a href="${wa}" target="_blank" class="btn btn-success btn-sm mt-2" style="color:white;">WhatsApp</a>
-                    <button class="btn btn-info btn-sm mt-2" onclick="routeTo(${tech.latitude}, ${tech.longitude})">Lihat Rute</button>
-                    <button class="btn btn-warning btn-sm mt-2" onclick="orderTechnician('${tech.name}', '${tech.phone}', ${tech.id})">Pesan Teknisi</button>
-                `;
-
-                marker.bindPopup(popupContent);
-                markers.push(marker);
-            });
-        });
-}
-
-function routeTo(destLat, destLng) {
-    if (!userLat || !userLng) {
-        alert("Lokasi Anda tidak diketahui.");
-        return;
-    }
-
-    if (routingControl) {
-        map.removeControl(routingControl);
-    }
-
-    routingControl = L.Routing.control({
-        waypoints: [
-            L.latLng(userLat, userLng),
-            L.latLng(destLat, destLng)
-        ],
-        routeWhileDragging: false
-    }).addTo(map);
-}
-
-function orderTechnician(name, phone) {
-    const confirmOrder = confirm(`Anda yakin ingin memesan teknisi ${name}?`);
-    if (confirmOrder) {
-        alert(`Pesanan untuk teknisi ${name} sedang diproses. Silakan hubungi via WhatsApp untuk konfirmasi.`);
-        window.open(`https://wa.me/62${phone.replace(/^0/, '')}?text=Halo%20${name},%20saya%20ingin%20memesan%20layanan%20teknisi.`, '_blank');
-    }
-}
-</script>
-<script>
-    function orderTechnician(name, phone, id) {
-        document.getElementById('techId').value = id;
-        document.getElementById('techName').value = name;
-        new bootstrap.Modal(document.getElementById('orderModal')).show();
-    }
-</script>
 
 @endpush
