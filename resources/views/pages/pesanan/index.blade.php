@@ -1,60 +1,85 @@
 @extends('layouts.appfront')
 
-@section('title', 'All Pesanan')
+@section('title', 'My Order')
+
+@push('style')
+
+@endpush
 
 @section('main')
-		<!-- Start Checkout -->
+<x-alert></x-alert>
+<main class="main">
 
-		<section class="shop checkout section mt-5">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-4 col-12">
+    <section id="about" class="about section">
+      <div class="container">
+        <div class="row">
+            <h2 style="text-align: center;">My Order</h2>
 
-					</div>
-					<div class="col-lg-8 col-12">
-						<h5>Pesanan</h5><br>
-						<table class="table">
-							<tr>
-								<th>No</th>
-								<th>Tgl Pesanan</th>
-								<th>Nama Penerima</th>
-								<th>No Hp</th>
-								<th>Alamat</th>
-								<th>Keterangan</th>
-								<th>Action</th>
-							</tr>
-							 @php($i = 1)
-                             @foreach ($pesanans as $pesan)
-                             	<tr>
-                                  <td>{{ $i++ }}</td>
-                                  <td>{{ $pesan->tgl_pemesanan }}</td>
-                                  <td>{{ $pesan->nama_penerima }}</td>
-                                  <td>{{ $pesan->no_hp }}</td>
-                                  <td>{{ $pesan->alamat }}</td>
-                                  <td>{{ $pesan->keterangan }}</td>
-                                  <td style="width: 200px;">
+            <table id="example" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                        <th>No</th>
+                        <th>Tempat Service</th>
+                        <th>Nama Pelanggan</th>
+                        <th>Jenis Kerusakan</th>
+                        <th>Biaya</th>
+                        <th>Jasa Antar</th>
+                        <th>Tarif Jemput</th>
+                        <th>Total Biaya</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                   @php
+                       $no = 1;
+                   @endphp
+                  @foreach ($data as $dat)
+                    <tr>
+                        <td>{{ $no++ }}</td>
+                        <td>{{$dat->name}}</td>
+                        <td>{{$dat->nama_pelanggan}}</td>
+                        <td>{{$dat->jenis_kerusakan}}</td>
+                        <td>{{$dat->biaya}}</td>
+                        <td>{{$dat->nama_jasa}}</td>
+                        <td>{{$dat->tarif_antar}}</td>
+                        <td>{{$dat->total_biaya}}</td>
+                        <td>{{$dat->status_order}}</td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <?php
+                                    if($dat->status_order == 'unpaid'){ ?>
 
-                                        <?php if($pesan->status == 'Unpaid'){ ?>
-                                  		<a href="/invoice/{{$pesan->id}}/lihatinvoice"><u>Bayar</u></a>
-                                        <?php }else{ ?>
-                                            <a href="/invoice/{{$pesan->id}}/invoicedetail"><u>Invoice</u></a>
-                                        <?php } ?>
-										<?php if($pesan->keterangan == 'dikirim') { ?>
-											<a href="/konfirmasi/update/{{$pesan->id}}"><u>Konfirmasi</u></a>
-										<?php } ?>
-                                  </td>
-                                </tr>
+                                        <a href='/pesan/{{$dat->id}}/bayar'
+                                            class="btn btn-sm btn-info btn-icon">
+                                            <i class="fas fa-edit"></i>
+                                            Bayar
+                                        </a>
+                                    <?php }else{ ?>
+                                            <p>selesai</p>
+                                    <?php } ?>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+                  </tbody>
+    </table>
+      </div>
+      </div>
 
-                             @endforeach
-						</table>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--/ End Checkout -->
+    </section>
+
+  </main>
 
 @endsection
 
 @push('scripts')
-
+<script>
+  $(function () {
+    $("#example").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+  });
+</script>
 @endpush

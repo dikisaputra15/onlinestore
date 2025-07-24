@@ -1,7 +1,6 @@
 
 <table>
     <tr>
-        <td style="width:150px;"><img src="{{ public_path('eshop/images/logo.jpeg') }}" style="width: 80px; height: 60px;"></td>
         <td><h3 style="text-align: center;">Laporan Penjualan</h3></td>
     </tr>
   </table>
@@ -11,28 +10,24 @@
   <tr>
     <th>No</th>
     <th>Tanggal</th>
-    <th>Nama Penerima</th>
-    <th>Nama Produk</th>
-    <th>Qty</th>
-    <th>Harga</th>
-    <th>Sub Total</th>
+    <th>Nama Pelanggan</th>
+    <th>Biaya Servis</th>
+    <th>Biaya Tarif antar</th>
   </tr>
   @php($i = 1)
   @foreach($pesanans as $pesan)
   <tr>
     <td>{{ $i++ }}</td>
-    <td>{{$pesan->tgl_pemesanan}}</td>
-    <td>{{$pesan->name}}</td>
-    <td>{{$pesan->nama_produk}}</td>
-    <td>{{$pesan->qty}}</td>
-    <td>Rp. {{$pesan->harga_bayar}}</td>
-    <td>Rp. {{$pesan->sub_total}}</td>
+    <td>{{$pesan->tgl_order}}</td>
+    <td>{{$pesan->nama_pelanggan}}</td>
+    <td>{{$pesan->biaya}}</td>
+    <td>{{$pesan->tarif_antar}}</td>
   </tr>
   @endforeach
   <tr>
 
-    <td colspan="6" style="text-align: center;">Total Pendapatan</td>
-    <td>Rp. {{$total}}</td>
+    <td colspan="4" style="text-align: center;">Total Pendapatan</td>
+    <td>Rp. {{$pesan->total_biaya}}</td>
   </tr>
 </table>
 

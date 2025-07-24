@@ -1,132 +1,77 @@
-@extends('layouts.appfront')
+@extends('layouts.master')
 
-@section('title', 'Invoice')
+@section('title','Invoice')
 
-@push('style')
-    <script type="text/javascript"
-		src="{{config('midtrans.snap_url')}}"
-    data-client-key="{{config('midtrans.client_key')}}"></script>
-@endpush
+@section('conten')
 
-@section('main')
-		<!-- Start Checkout -->
+<x-alert></x-alert>
+<div class="card" id="invoiceArea">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h3>Invoice</h3>
 
-		<section class="shop checkout section mt-5">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-4 col-12">
-
-					</div>
-					<div class="col-lg-8 col-12">
-						<div class="order-details">
-							<!-- Order Widget -->
-							<h2>Invoice</h2>
-							<div class="single-widget">
-								<h2>LIST PESANAN</h2>
-								<div class="content">
-									<table class="table">
-										<tr>
-											<td>No</td>
-											<td>Nama Produk</td>
-											<td>Gambar</td>
-											<td>Qty</td>
-											<td>Harga</td>
-											<td>Sub Total</td>
-										</tr>
-
-										@php($i = 1)
-										@foreach ($details as $detail)
-										<tr>
-											<td>{{ $i++ }}</td>
-											<td>{{ $detail->nama_produk }}</td>
-											<td><img src="{{ Storage::url('gambarproduk/'.$detail->path_gambar) }}" style="width:60px; height:60px;"></td>
-											<td>{{ $detail->qty }}</td>
-											<td>{{ $detail->harga_bayar }}</td>
-											<td>{{ $detail->sub_total }}</td>
-										</tr>
-										@endforeach
-										<tr>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td>Total</td>
-											<td>Rp.</td>
-											<td>{{ $pesanan->total_bayar }}</td>
-										</tr>
-									</table>
-								</div>
-
-								<h2>Identitas Pengiriman</h2><br>
-								<div class="content">
-
-									<div class="form-group">
-										<div class="col-lg-12 col-12">
-										<p>{{$pesanan->nama_penerima}}</p>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<div class="col-lg-12 col-12">
-										<p>{{$pesanan->no_hp}}</p>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<div class="col-lg-12 col-12">
-										<p>{{$pesanan->alamat}}</p>
-										</div>
-									</div>
-								</div>
-
-							</div>
-
-                            <div class="single-widget get-button">
-								<div class="content">
-
-									<div class="button">
-										<button class="btn" id="pay-button">Pilih Pembayaran</button>
-									</div>
-
-								</div>
-							</div>
-
-							<!--/ End Button Widget -->
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<!--/ End Checkout -->
-
+    </div>
+    <div class="card-body">
+        <table>
+            <tr>
+                <td>Tempat Service</td>
+                <td>:</td>
+                <td>{{$dat->name}}</td>
+            </tr>
+            <tr>
+                <td>Nama Pelanggan</td>
+                <td>:</td>
+                <td>{{$dat->nama_pelanggan}}</td>
+            </tr>
+            <tr>
+                <td>Jenis Kerusakan</td>
+                <td>:</td>
+                <td>{{$dat->jenis_kerusakan}}</td>
+            </tr>
+            <tr>
+                <td>Biaya</td>
+                <td>:</td>
+                <td>{{$dat->biaya}}</td>
+            </tr>
+            <tr>
+                <td>Jasa Antar</td>
+                <td>:</td>
+                <td>{{$dat->nama_jasa}}</td>
+            </tr>
+            <tr>
+                <td>Tarif Jemput</td>
+                <td>:</td>
+                <td>{{$dat->tarif_antar}}</td>
+            </tr>
+            <tr>
+                <td>Total Bayar</td>
+                <td>:</td>
+                <td>{{$dat->total_biaya}}</td>
+            </tr>
+        </table>
+        <button onclick="printInvoice()" class="btn btn-primary btn-sm">🖨 Cetak Invoice</button>
+    </div>
+</div>
 @endsection
 
-@push('scripts')
-<script type="text/javascript">
-    // For example trigger on button clicked, or any time you need
-    var payButton = document.getElementById('pay-button');
-    payButton.addEventListener('click', function () {
-      // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token.
-      // Also, use the embedId that you defined in the div above, here.
-      window.snap.pay('{{$snapToken}}', {
-        onSuccess: function (result) {
-          /* You may add your own implementation here */
-            // alert("payment success!");
-            window.location.href = '/pesanan'
-            console.log(result);
-        },
-        onPending: function (result) {
-          /* You may add your own implementation here */
-          alert("wating your payment!"); console.log(result);
-        },
-        onError: function (result) {
-          /* You may add your own implementation here */
-          alert("payment failed!"); console.log(result);
-        },
-        onClose: function () {
-          /* You may add your own implementation here */
-          alert('you closed the popup without finishing the payment');
+@push('service')
+<script>
+    function printInvoice() {
+        const printContents = document.getElementById('invoiceArea').innerHTML;
+        const originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+
+        // Refresh untuk mengembalikan event dan JS
+        location.reload();
+    }
+</script>
+<style>
+    @media print {
+        button {
+            display: none !important;
         }
-      });
-    });
-  </script>
+    }
+</style>
 @endpush
